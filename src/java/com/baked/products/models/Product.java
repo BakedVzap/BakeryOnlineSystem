@@ -17,12 +17,14 @@ public class Product {
     private String warnings;
     private String nutritionalInformation;
     private String pictureOfCreation;
+    private Double price;
     private Integer quantity;
     private ArrayList<Recipe>ingredients;
     
-    public Product(String name,String description,String warnings,String nutritionalInformation, String pictureOfCreation,Integer quantity){
+    public Product(String name,String description,double price,String warnings,String nutritionalInformation, String pictureOfCreation,Integer quantity){
         setName(name);
         setDescription(description);
+        setPrice(price);
         setWarnings(warnings);
         setNutritionalInformation(nutritionalInformation);
         setPictureOfCreation(pictureOfCreation);
@@ -125,5 +127,19 @@ public class Product {
      */
     public void setIngredients(ArrayList<Recipe> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    /**
+     * @return the price
+     */
+    public Double getPrice() {
+        return price;
+    }
+
+    /**
+     * @param price the price to set
+     */
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }
