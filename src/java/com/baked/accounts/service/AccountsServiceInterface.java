@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.baked.accounts.dao;
+package com.baked.accounts.service;
 
 import com.baked.accounts.models.Address;
 import com.baked.accounts.models.Payment;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
  *
  * @author khwezi
  */
-public interface AccountsDAOInterface {
+public interface AccountsServiceInterface {
     User login(String email,String password);
     boolean signUp(User user);
     boolean editUserProfile(User user);
@@ -27,5 +27,4 @@ public interface AccountsDAOInterface {
     boolean addAddress(Address address,String userID);
     ArrayList<Address> getAllUserAddress(String userID);
     boolean deleteUserAddress(int userAddressID,String userID);
-    boolean passwordRest(String userID,String newPassword);
 }

@@ -89,12 +89,17 @@ public class AccountsDAOImp implements AccountsDAOInterface {
     }
 
     @Override
-    public ArrayList<Address> getUserAddress(String userID) {
+    public ArrayList<Address> getAllUserAddress(String userID) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public boolean deleteUserAddress(int userAddressID, String userID) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean passwordRest(String userID, String newPassword) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

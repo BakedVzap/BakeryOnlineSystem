@@ -20,9 +20,10 @@ public class User {
     private String mobileTelephoneNumber;
     private String emailAddress;
     
-    public User(String name,String surname,String title,int role,String idNumber, String homeTelephoneNumber,String mobileTelephoneNumber,String emailAddress){
+    public User(String name,String surname,String password,String title,int role,String idNumber, String homeTelephoneNumber,String mobileTelephoneNumber,String emailAddress){
         setName(name);
         setSurname(surname);
+        setPassword(password);
         setTitle(title);
         setRole(role);
         setIdNumber(idNumber);
@@ -30,6 +31,8 @@ public class User {
         setMobileTelephoneNumber(homeTelephoneNumber);
         setEmailAddress(emailAddress);
     }
+    public User(){}
+    
 
     /**
      * @return the name
@@ -141,6 +144,20 @@ public class User {
      */
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
+    }
+
+    /**
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
     }
     
 }
