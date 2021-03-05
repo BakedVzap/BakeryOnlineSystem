@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.baked.accounts.models;
 
 /**
@@ -19,8 +15,9 @@ public class User {
     private String homeTelephoneNumber;
     private String mobileTelephoneNumber;
     private String emailAddress;
+    private String profilePicture;
     
-    public User(String name,String surname,String password,String title,int role,String idNumber, String homeTelephoneNumber,String mobileTelephoneNumber,String emailAddress){
+    public User(String name,String surname,String password,String title,int role,String idNumber, String homeTelephoneNumber,String mobileTelephoneNumber,String emailAddress, String profilePicture){
         setName(name);
         setSurname(surname);
         setPassword(password);
@@ -30,6 +27,7 @@ public class User {
         setHomeTelephoneNumber(homeTelephoneNumber);
         setMobileTelephoneNumber(homeTelephoneNumber);
         setEmailAddress(emailAddress);
+        setProfilePicture(profilePicture);
     }
     public User(){}
     
@@ -158,6 +156,14 @@ public class User {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
     
 }

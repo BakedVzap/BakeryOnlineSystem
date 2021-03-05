@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.baked.accounts.dao;
 
 import com.baked.accounts.models.Address;
@@ -12,7 +8,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author khwezi
+ * @author UnicornBrendan
  */
 public interface AccountsDAOInterface {
     User login(String email,String password);
@@ -28,4 +24,5 @@ public interface AccountsDAOInterface {
     ArrayList<Address> getAllUserAddress(String userID);
     boolean deleteUserAddress(int userAddressID,String userID);
     boolean passwordRest(String userID,String newPassword);
+    public ArrayList<Address> getUserAddress(String userID);
 }

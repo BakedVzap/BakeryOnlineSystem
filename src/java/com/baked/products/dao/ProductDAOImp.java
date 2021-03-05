@@ -1,41 +1,43 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.baked.products.dao;
 
 import com.baked.products.models.Category;
 import com.baked.products.models.Ingredient;
 import com.baked.products.models.Product;
 import com.baked.products.models.Recipe;
-import com.mysql.jdbc.PreparedStatement;
+// import com.mysql.jdbc.PreparedStatement; //
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
  *
- * @author khwezi
+ * @author UnicornBrendan
  */
 public class ProductDAOImp implements ProductsDAOInterface {
     private Connection con;
     private PreparedStatement ps;
     private ResultSet rs;
     
-    public ProductDAOImp(){
-         try {
+    public ProductDAOImp()
+    {
+         try 
+        {
             Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException ex) {
+        } catch (ClassNotFoundException ex) 
+        {
             System.out.println("Driver not found");
             System.exit(0);
         }
         String url = "jdbc:mysql://localhost:3306/";
-        try {
+        try 
+        {
             con = DriverManager.getConnection(url, "root", "root");
-        } catch (SQLException ex) {
+        } catch (SQLException ex) 
+        {
             System.out.println("Connection not established");
         }
     }
