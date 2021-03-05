@@ -36,7 +36,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
             System.out.println("Driver not found");
             System.exit(0);
          }
-        String url = "jdbc:mysql://localhost:3306/TheDoughKnot";
+        String url = "jdbc:mysql://192.168.20.241:3306/TheDoughKnot";
         try 
         {
             con = DriverManager.getConnection(url, "root", "root");
