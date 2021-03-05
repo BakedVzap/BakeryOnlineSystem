@@ -112,17 +112,24 @@ public class AccountsRest {
     public boolean deleteUserAddress(int userAddressID,String userID){
         return accService.deleteUserAddress(userAddressID, userID);
     }
-    public boolean passwordRecovery(String email){
-        try {
-            new EmailSender(email,"Password Recovery","To reset your password please click on this link: ");
-        } catch (MessagingException ex) {
-            System.out.println(ex.getMessage());
-            return false;
+    @POST
+    @Path("/password-recovery/{userEmail}")
+    public Response passwordRecovery(@PathParam("userEmail")String email){
+       if(accService.passwordRecovery(email)){
+           return Response.status(Response.Status.OK).entity("An Email has been sent to "+email).build(); 
         }
-        return true;
+           return Response.status(Response.Status.OK).entity("Could not sent email.").build(); 
+        
+       
     }
-    public boolean passwordRest(String userID, String newPassword){
-        return accDao.passwordRest(userID,newPassword);
+    @POST
+    @Path("/reset-user-password/{userID}/{newPassword}")
+    public Response passwordRest(@PathParam("userID")String userID,@PathParam("newPassword") String newPassword){
+        if(accService.passwordRest(userID,newPassword)){
+            return Response.status(Response.Status.OK).entity("Password has been reset.").build(); 
+        }
+        return Response.status(Response.Status.OK).entity("Could not reset password.").build(); 
+        
     }
    
     

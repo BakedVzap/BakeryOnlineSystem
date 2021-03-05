@@ -26,5 +26,7 @@ public interface AccountsServiceInterface {
     ArrayList<Payment>getAllUserPayments(String userID);
     boolean addAddress(Address address,String userID);
     ArrayList<Address> getAllUserAddress(String userID);
+    boolean passwordRecovery(String email);
+    boolean passwordRest(String userID, String newPassword);
     boolean deleteUserAddress(int userAddressID,String userID);
 }

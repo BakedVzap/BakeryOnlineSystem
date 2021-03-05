@@ -86,6 +86,7 @@ public class AccountsServiceImp implements AccountsServiceInterface {
     public boolean deleteUserAddress(int userAddressID,String userID){
         return accDao.deleteUserAddress(userAddressID, userID);
     }
+    @Override
     public boolean passwordRecovery(String email){
         try {
             new EmailSender(email,"Password Recovery","To reset your password please click on this link: ");
@@ -95,6 +96,7 @@ public class AccountsServiceImp implements AccountsServiceInterface {
         }
         return true;
     }
+     @Override
     public boolean passwordRest(String userID, String newPassword){
         return accDao.passwordRest(userID,newPassword);
     }
