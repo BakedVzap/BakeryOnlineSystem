@@ -12,7 +12,9 @@ public class Address {
     private String suberb;
     private String city;
     
-    public Address(String streetNumber,String streetName, String suberb,String city){
+    public Address(){}
+    public Address(String id,String streetNumber,String streetName, String suberb,String city){
+        setId(id);
         setStreetNumber(streetNumber);
         setStreetName(streetName);
         setSuberb(suberb);
@@ -29,7 +31,8 @@ public class Address {
     /**
      * @param id the id to set
      */
-    public void setId() {
+    public void setId(String id) {
+        this.id=id;
         
     }
 

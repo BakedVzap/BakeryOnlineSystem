@@ -3,7 +3,7 @@ package com.baked.accounts.models;
 
 /**
  *
- * @author khwezi
+ * @author UnicornBrendan
  */
 public class User {
     private String name;

@@ -13,7 +13,7 @@ public class Ingredient {
         setName(name);
         setQuantity(quantity);
     }
-
+    public Ingredient(){}
     /**
      * @return the name
      */

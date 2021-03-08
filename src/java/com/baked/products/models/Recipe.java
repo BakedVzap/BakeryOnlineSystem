@@ -22,7 +22,8 @@ public class Recipe {
     public String getProduct() {
         return product;
     }
-
+    
+    public Recipe(){}
     /**
      * @param product the product to set
      */

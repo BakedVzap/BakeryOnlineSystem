@@ -1,26 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.baked.accounts.models;
 
 
 
 /**
  *
- * @author khwezi
+ * @author UnicornBrendan
  */
 public class Payment {
     private String cardNumber;
-    private String expireryDate;
+    private String expiryDate;
     private String cvvCode;
     private String cardType;
     private String userID;
     
-    public Payment(String cardNumber,String expireryDate,String cvvCode,String cardType,String userID ){
+    public Payment(String cardNumber,String expiryDate,String cvvCode,String cardType,String userID ){
         setCardNumber(cardNumber);
-        setExpireryDate(expireryDate);
+        setExpiryDate(expiryDate);
         setCvvCode(cvvCode);
         setCardType(cardType);
         setUserID(userID);
@@ -43,17 +39,17 @@ public class Payment {
     }
 
     /**
-     * @return the expireryDate
+     * @return the expiryDate
      */
-    public String getExpireryDate() {
-        return expireryDate;
+    public String getExpiryDate() {
+        return expiryDate;
     }
 
     /**
-     * @param expireryDate the expireryDate to set
+     * @param expiryDate the expiryDate to set
      */
-    public void setExpireryDate(String expireryDate) {
-        this.setExpireryDate(expireryDate);
+    public void setExpiryDate(String expiryDate) {
+        this.setExpiryDate(expiryDate);
     }
 
     /**
