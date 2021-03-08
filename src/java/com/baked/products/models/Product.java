@@ -17,20 +17,31 @@ public class Product {
     private String warnings;
     private String nutritionalInformation;
     private String pictureOfCreation;
-    private Double price;
     private Integer quantity;
-    private ArrayList<Recipe>ingredients;
+    private ArrayList<Recipe> recipes;
+    private ArrayList<Category> categories;
+    private Double price;
     
-    public Product(String name,String description,double price,String warnings,String nutritionalInformation, String pictureOfCreation,Integer quantity){
+    public Product(String name,String description,String warnings,String nutritionalInformation, String pictureOfCreation,Integer quantity){
         setName(name);
         setDescription(description);
-        setPrice(price);
         setWarnings(warnings);
         setNutritionalInformation(nutritionalInformation);
         setPictureOfCreation(pictureOfCreation);
         setQuantity(quantity);
     }
-
+    public Product(String name, String description, String warnings, String nutrition, String picture, Double price, ArrayList<Category> categories,
+    				ArrayList<Recipe> recipes) {
+    	setName(name);
+    	setDescription(description);
+    	setWarnings(warnings);
+    	setNutritionalInformation(nutrition);
+    	setPictureOfCreation(picture);
+    	this.price=price;
+    	setCategories(categories);
+        setRecipe(recipes);
+    }
+    public Product(){}
     /**
      * @return the name
      */
@@ -118,28 +129,34 @@ public class Product {
     /**
      * @return the ingredients
      */
-    public ArrayList<Recipe> getIngredients() {
-        return ingredients;
+    public ArrayList<Recipe> getRecipes() {
+        return recipes;
     }
 
     /**
      * @param ingredients the ingredients to set
      */
-    public void setIngredients(ArrayList<Recipe> ingredients) {
-        this.ingredients = ingredients;
+    public void setRecipe(ArrayList<Recipe> recipes) {
+        this.recipes = recipes;
     }
-
-    /**
-     * @return the price
-     */
+    
     public Double getPrice() {
-        return price;
+    	return price;
     }
-
-    /**
-     * @param price the price to set
-     */
     public void setPrice(Double price) {
-        this.price = price;
+    	this.price=price;
     }
+    
+    public ArrayList<Category> getCategories(){
+    	return categories;
+    }
+    public void setCategories(ArrayList<Category> categories) {
+    	this.categories=categories;
+    }
+	@Override
+	public String toString() {
+		return "Product [name=" + name + ", description=" + description + ", warnings=" + warnings
+				+ ", nutritionalInformation=" + nutritionalInformation + ", pictureOfCreation=" + pictureOfCreation
+				+ ", quantity=" + quantity + ", ingredients=" + recipes + ", price=" + price + "]";
+	}
 }

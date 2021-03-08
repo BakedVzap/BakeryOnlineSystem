@@ -58,7 +58,7 @@ public class ProductDAOImp implements ProductsDAOInterface {
     }
 
     @Override
-    public ArrayList<Product> getProductsByCategory() {
+    public ArrayList<Product> getProductsByCategory(Category category) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -93,7 +93,7 @@ public class ProductDAOImp implements ProductsDAOInterface {
     }
 
     @Override
-    public boolean addProductRecipe(ArrayList<Recipe> recipes, String productID) {
+    public boolean addProductRecipe(Recipe recipe) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -126,5 +126,19 @@ public class ProductDAOImp implements ProductsDAOInterface {
     public Recipe getRecipeItem(String productName, String ingredientName) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+    public Category getCategory(Category category) {
+        return null;
+    }
+    public boolean addToCategoryProduct(){
+        return false;
+    }
+    public  boolean addProuctCategory(Category category, Product prod){
+        return false;
+    }
+    public ArrayList<Category> getAllCategoryOfProduct(Product prod) {
+        return null;
+    }
+    public ArrayList<Product> getProductsByName(String prodName) {
+        return null;
+    }
 }

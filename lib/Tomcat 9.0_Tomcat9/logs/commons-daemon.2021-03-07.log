@@ -1,0 +1,28 @@
+[2021-03-07 09:46:38] [info]  [ 9956] Apache Commons Daemon procrun (1.2.4.0 64-bit) started.
+[2021-03-07 09:46:39] [info]  [ 9956] Installing service 'Tomcat9.0' name 'Apache Tomcat 9.0 Tomcat9.0'.
+[2021-03-07 09:46:39] [info]  [ 9956] Service 'Tomcat9.0' installed.
+[2021-03-07 09:46:39] [info]  [ 9956] Apache Commons Daemon procrun finished.
+[2021-03-07 09:46:43] [info]  [10108] Apache Commons Daemon procrun (1.2.4.0 64-bit) started.
+[2021-03-07 09:46:44] [info]  [10108] Updating service...
+[2021-03-07 09:46:44] [info]  [10108] Updated service 'Tomcat9.0'.
+[2021-03-07 09:46:44] [info]  [10108] Finished updating service 'Tomcat9.0'.
+[2021-03-07 09:46:44] [info]  [10108] Apache Commons Daemon procrun finished.
+[2021-03-07 09:46:45] [info]  [ 9360] Apache Commons Daemon procrun (1.2.4.0 64-bit) started.
+[2021-03-07 09:46:45] [info]  [ 9360] Updating service...
+[2021-03-07 09:46:45] [info]  [ 9360] Updated service 'Tomcat9.0'.
+[2021-03-07 09:46:45] [info]  [ 9360] Finished updating service 'Tomcat9.0'.
+[2021-03-07 09:46:45] [info]  [ 9360] Apache Commons Daemon procrun finished.
+[2021-03-07 09:46:45] [info]  [ 8848] Apache Commons Daemon procrun (1.2.4.0 64-bit) started.
+[2021-03-07 09:46:46] [info]  [ 8848] Updating service...
+[2021-03-07 09:46:46] [info]  [ 8848] Updated service 'Tomcat9.0'.
+[2021-03-07 09:46:46] [info]  [ 8848] Finished updating service 'Tomcat9.0'.
+[2021-03-07 09:46:46] [info]  [ 8848] Apache Commons Daemon procrun finished.
+[2021-03-07 09:46:46] [info]  [ 9584] Apache Commons Daemon procrun (1.2.4.0 64-bit) started.
+[2021-03-07 09:46:46] [info]  [ 9584] Updating service...
+[2021-03-07 09:46:47] [info]  [ 9584] Updated service 'Tomcat9.0'.
+[2021-03-07 09:46:47] [info]  [ 9584] Finished updating service 'Tomcat9.0'.
+[2021-03-07 09:46:47] [info]  [ 9584] Apache Commons Daemon procrun finished.
+[2021-03-07 09:47:52] [info]  [ 8540] Apache Commons Daemon procrun (1.2.4.0 64-bit) started.
+[2021-03-07 09:47:52] [info]  [ 8540] Running Service 'Tomcat9.0'...
+[2021-03-07 09:47:52] [info]  [ 7912] Starting service...
+[2021-03-07 09:47:59] [info]  [ 7912] Service started in 7083 milliseconds.
