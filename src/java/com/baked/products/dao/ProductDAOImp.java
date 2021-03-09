@@ -519,7 +519,7 @@ public class ProductDAOImp implements ProductsDAOInterface {
     @Override
     public Category getCategory(Category category) 
     {
-        Category tempCat = new Category();;
+        Category tempCat = new Category();
         try 
          {
              myStmt = con.createStatement(); 
