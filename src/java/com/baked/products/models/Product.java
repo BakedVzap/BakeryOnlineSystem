@@ -17,11 +17,22 @@ public class Product {
     private Integer quantity;
     private Double discountMargin;
     private ArrayList<Recipe>ingredients;
-    private Integer category;
-    
+    private ArrayList<Category>categories;
     public Product(String name,Integer category){
         setName(name);
-        setCategory(category);
+    }
+
+    public Product(String name, String description, String warnings, String nutritionalInformation, String pictureOfCreation, Double price, Integer quantity, Double discountMargin, ArrayList<Recipe> ingredients, ArrayList<Category> categories) {
+        this.name = name;
+        this.description = description;
+        this.warnings = warnings;
+        this.nutritionalInformation = nutritionalInformation;
+        this.pictureOfCreation = pictureOfCreation;
+        this.price = price;
+        this.quantity = quantity;
+        this.discountMargin = discountMargin;
+        this.ingredients = ingredients;
+        this.categories = categories;
     }
     
     public Product(String name,String description,double price,String warnings,String nutritionalInformation, String pictureOfCreation,Integer quantity){
@@ -41,7 +52,6 @@ public class Product {
         setNutritionalInformation(nutritionalInformation);
         setPictureOfCreation(pictureOfCreation);
         setQuantity(quantity);
-        setCategory(category);
     }
 
     /**
@@ -165,11 +175,11 @@ public class Product {
         this.discountMargin = discountMargin;
     }
 
-    public Integer getCategory() {
-        return category;
+    public ArrayList<Category> getCategories() {
+        return categories;
     }
 
-    public void setCategory(Integer category) {
-        this.category = category;
+    public void setCategories(ArrayList<Category> categories) {
+        this.categories = categories;
     }
 }

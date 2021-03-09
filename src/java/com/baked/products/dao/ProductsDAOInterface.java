@@ -22,16 +22,15 @@ public interface ProductsDAOInterface {
     boolean editCategory(Category category);
     boolean addIngredients(Ingredient ingred);
     boolean deleteProduct(String productName);
-    boolean addProductRecipe(Recipe recipe);
+    //boolean addProductRecipe(Recipe recipe);
     boolean editIngredient(Ingredient ingred);
     ArrayList<Ingredient> getIngredients();
     boolean deleteIngredient(String ingredientName);
     Product getProduct(String productName);
     Ingredient getIngredient(String ingredientName);
-    Recipe getRecipeItem(String productName,String ingredientName);
+    //Recipe getRecipeItem(String productName,String ingredientName);
     Category getCategory(Category category);
-    boolean addToCategoryProduct();
-    boolean addProuctCategory(Category category, Product prod);
-    ArrayList<Category> getAllCategoryOfProduct(Product prod);
-    ArrayList<Product> getProductsByName(String name);
+    //boolean addProductCategory(Category category, Product prod);
+    //ArrayList<Category> getAllCategoryOfProduct(Product prod);
+    //ArrayList<Product> getProductsByName(String name);
 }

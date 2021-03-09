@@ -16,7 +16,6 @@ import java.util.ArrayList;
  * @author Rt Netwa
  */
 public interface ProductsServiceInterface {
-    ArrayList<Recipe> getRecipes(String productName);
     boolean addProduct(Product product);
     ArrayList<Product> getAllProducts();
     ArrayList<Product> getProductsByCategory(Category category);
@@ -32,9 +31,6 @@ public interface ProductsServiceInterface {
     boolean deleteIngredient(String ingredientName);
     Product getProduct(String productName);
     Ingredient getIngredient(String ingredientName);
-    Recipe getRecipeItem(String productName,String ingredientName);
     Category getCategory(Category category); //Added new methods 
-    boolean addProuctCategory(Category category, Product prod);
-    ArrayList<Category> getAllCategoryOfProduct(Product prod);
     ArrayList<Product> getProductsByName(String prodName);
 }

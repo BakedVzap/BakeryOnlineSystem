@@ -61,25 +61,21 @@ public class ProductDAOImp implements ProductsDAOInterface {
          }
         try
             {
-                // the cursor will start at the first field and work through the whole database assigning each line to a new user template
                 while(rs.next())
                     { 
-                        //Clearing new User aka template
                         tempRecipe = new Recipe();
-                        //Assigning all fields from the result set to new template
                         tempRecipe.setProduct(rs.getString("Product"));
                         tempRecipe.setIngredient(rs.getString("Ingredient"));
                         tempRecipe.setMeasurement(rs.getDouble("Unit"));
                      
                         
-                        // returning now that new user object to the List created at start of method
                         tempRecipes.add(tempRecipe);
                 }
         }catch(SQLException ex)
         {
             System.out.println("Error at GetAll getUserAddresses: "+ex.getMessage());
         }
-        return tempRecipes; // giving back the ArrayList here  
+        return tempRecipes;   
     }
 
     @Override
@@ -87,7 +83,6 @@ public class ProductDAOImp implements ProductsDAOInterface {
     {
          try
             {
-                // Populating both the product and the productingredient tables
                  ps = con.prepareStatement("INSERT INTO product( Name, Price, Description, Warning, Information, Image, Quantity, DiscountMargin) VALUES (?, ?, ?, ?, ?, ?, ?, ? )");
                  ps.setString(1, product.getName());
                  ps.setDouble(2, product.getPrice());
@@ -101,13 +96,12 @@ public class ProductDAOImp implements ProductsDAOInterface {
                  ps.executeUpdate();
             }catch(SQLException ex)
                 {
-                    System.out.println("Error at GetAll products : "+ex.getMessage());
+                    System.out.println("Error at add product : "+ex.getMessage());
                     return false;
                 }
         
         try
             {
-                // Populating both the payment and the paymentusertable tables
                  ps = con.prepareStatement("INSERT INTO productingredient( Product, Ingredient , Unit) VALUES (?, ?, ?)");
                  ps.setString(1, product.getName());
                  ps.setString(2, product.getDescription());
@@ -116,7 +110,7 @@ public class ProductDAOImp implements ProductsDAOInterface {
                  ps.executeUpdate();
             }catch(SQLException ex)
                 {
-                    System.out.println("Error at GetAll Users userPaymenttable : "+ex.getMessage());
+                    System.out.println("Error at add product : "+ex.getMessage());
                     return false;
                 }
         return true;
@@ -137,12 +131,9 @@ public class ProductDAOImp implements ProductsDAOInterface {
          }
         try
             {
-                // the cursor will start at the first field and work through the whole database assigning each line to a new user template
                 while(rs.next())
                     { 
-                        //Clearing new Product aka template
                         tempProduct= new Product();
-                        //Assigning all fields from the result set to new template
                         tempProduct.setName(rs.getString("Name"));
                         tempProduct.setPrice(rs.getDouble("Price"));
                         tempProduct.setDescription(rs.getString("Description"));
@@ -152,47 +143,20 @@ public class ProductDAOImp implements ProductsDAOInterface {
                         tempProduct.setQuantity(rs.getInt("Quantity"));
                         tempProduct.setDiscountMargin(rs.getDouble("DiscountMargin"));
                         
-                        // returning now that new user object to the List created at start of method
                         tempProducts.add(tempProduct);
                 }
         }catch(SQLException ex)
         {
-            System.out.println("Error at GetAll payments: "+ex.getMessage());
+            System.out.println("Error at GetAll products: "+ex.getMessage());
         }
-        return tempProducts; // giving back the ArrayList here   
+        return tempProducts;    
     }
 
-    @Override
-    public ArrayList<Product> getProductsByCategory() 
-    {
-         ArrayList<Product> tempProducts = new ArrayList<Product>();
-        Product tempProduct;
-        try 
-         {
-             myStmt = con.createStatement(); 
-             rs = myStmt.executeQuery("SELECT Name, Price, Description, Warning, Information, Image, Quantity, DiscountMargin FROM product");
-         } catch (SQLException ex) 
-         {
-             System.out.println("Error at : "+ex.getMessage());
-         }
-        try
-            {
-                // the cursor will start at the first field and work through the whole database assigning each line to a new user template
-                while(rs.next())
-                    { 
-                        //Clearing new Product aka template
-                        tempProduct= new Product(rs.getString("Product"), rs.getInt("Category"));
-                        //Assigning all fields from the result set to new template
-                       
-                        // returning now that new user object to the List created at start of method
-                        tempProducts.add(tempProduct);
-                }
-        }catch(SQLException ex)
-        {
-            System.out.println("Error at GetAll payments: "+ex.getMessage());
-        }
-        return tempProducts; // giving back the ArrayList here   
-    }
+//    @Override
+//    public ArrayList<Product> getProductsByCategory() // public ArrayList<Product> getProductsByCategory(Category category)
+//    {
+//        
+//    }
 
     @Override
     public boolean editProduct(Product product) 
@@ -240,13 +204,10 @@ public class ProductDAOImp implements ProductsDAOInterface {
     @Override
     public ArrayList<Category> getCategories() 
     {
-        //Creating a new List of Categories
         ArrayList<Category> tempCats = new ArrayList<Category>();
-        // Creating a User reference here
         Category tempCat;
         try 
          {
-             // creating a statement to retrieve a result set of users
              myStmt = con.createStatement(); 
              rs = myStmt.executeQuery("SELECT ID, Name FROM category");
          } catch (SQLException ex) 
@@ -255,24 +216,20 @@ public class ProductDAOImp implements ProductsDAOInterface {
          }
         try
             {
-                // the cursor will start at the first field and work through the whole database assigning each line to a new user template
                 while(rs.next())
                     { 
-                        //Clearing new User aka template
                         tempCat = new Category();
-                        //Assigning all fields from the result set to new template
                         tempCat.setCateId(rs.getInt("ID"));
                         tempCat.setName(rs.getString("Name"));
                         
                         
-                        // returning now that new user object to the List created at start of method
                         tempCats.add(tempCat);
                 }
         }catch(SQLException ex)
         {
-            System.out.println("Error at GetAll Users: "+ex.getMessage());
+            System.out.println("Error at Get Categories: "+ex.getMessage());
         }
-        return tempCats; // giving back the ArrayList here
+        return tempCats; 
     }
 
     @Override
@@ -291,7 +248,7 @@ public class ProductDAOImp implements ProductsDAOInterface {
             }
         catch (SQLException ex) 
          {
-             System.out.println("Error at Edit Product : "+ex.getMessage());
+             System.out.println("Error at Edit Category: "+ex.getMessage());
              return false;
          }
         return true;
@@ -318,8 +275,7 @@ public class ProductDAOImp implements ProductsDAOInterface {
     {
          try 
          {
-             //must pass no whitespaces due to equals sign
-             ps = con.prepareStatement("DELETE * FROM product WHERE Name = '"+productName+"'");
+             ps = con.prepareStatement("UPDATE product SET Deleted = 1 WHERE Name = '"+productName+"'");
              ps.executeUpdate();
          } catch (SQLException ex) 
          {
@@ -329,27 +285,29 @@ public class ProductDAOImp implements ProductsDAOInterface {
         return true;
     }
 
-    @Override
-    public boolean addProductRecipe(ArrayList<Recipe> recipes, String productID) 
+    
+    private boolean addProductRecipe(ArrayList<Recipe> recipes, String productID) 
     {
         Recipe r1 ;
-        
         for(Recipe r : recipes)
             {
-            try {
-                ps = con.prepareStatement("INSERT INTO productingredient(Product, Ingredient, Unit) Values(?, ?, ? )");
-                ps.setString(1, productID);
-                ps.setString(2, r.getIngredient());
-                ps.setDouble(3, r.getMeasurement());
-                  
-                  ps.executeUpdate();
-            } catch (SQLException ex) 
-            {
-                System.out.println("");
+                try 
+                {
+                    ps = con.prepareStatement("INSERT INTO productingredient(Product, Ingredient, Unit) Values(?, ?, ? )");
+                    ps.setString(1, productID);
+                    ps.setString(2, r.getIngredient());
+                    ps.setDouble(3, r.getMeasurement());
+
+                      ps.executeUpdate();
+                } catch (SQLException ex) 
+                    {
+                        System.out.println("");
+                    } finally
+                        {
+                            return true;
+                        }
             }
-                
-            }
-        return true;
+       return true;
     }
 
     @Override
@@ -374,34 +332,29 @@ public class ProductDAOImp implements ProductsDAOInterface {
     @Override
     public ArrayList<Ingredient> getIngredients() 
     {
-        //Creating a new List of Ingredients
         ArrayList<Ingredient> tempIngreds = new ArrayList<Ingredient>();
-        // Creating an Ingredient reference here
-        Ingredient tempIngred;
+        Ingredient tempIngred=null;
         try 
          {
-             // creating a statement to retrieve a result set of uIngredients
-             myStmt = con.createStatement(); 
-             rs = myStmt.executeQuery("SELECT Name, Quantity FROM ingredient");
+             ps = con.prepareStatement("SELECT Name, Quantity FROM ingredient"); 
+           //  rs = myStmt.executeQuery("SELECT Name, Quantity FROM ingredient");
+           rs = ps.executeQuery();
          } catch (SQLException ex) 
          {
              System.out.println("Error at : "+ex.getMessage());
          }
         try
             {
-                // the cursor will start at the first field and work through the whole database assigning each line to a new user template
                 while(rs.next())
                     { 
-                        //Clearing new Ingredient aka template
                         tempIngred = new Ingredient(rs.getString("Name"),rs.getDouble("Quantity"));
-                        // returning now that new user object to the List created at start of method
                         tempIngreds.add(tempIngred);
-                }
+                    }
         }catch(SQLException ex)
         {
             System.out.println("Error at GetAll Users: "+ex.getMessage());
         }
-        return tempIngreds; // giving back the ArrayList here
+        return tempIngreds;
     }
 
     @Override
@@ -409,8 +362,7 @@ public class ProductDAOImp implements ProductsDAOInterface {
     {
         try 
          {
-             //must pass no whitespaces due to equals sign
-             ps = con.prepareStatement("DELETE * FROM ingredient WHERE Name = '"+ingredientName+"'");
+             ps = con.prepareStatement("Update ingredient SET Deleted = 1 WHERE Name LIKE '%"+ingredientName+"%'");
              ps.executeUpdate();
          } catch (SQLException ex) 
          {
@@ -426,7 +378,7 @@ public class ProductDAOImp implements ProductsDAOInterface {
         Product product= null;
         
         try {
-            ps=con.prepareStatement("SELECT Name, Price, Description, Warning, Information, Image, Quantity, DiscountMargin FROM product WHERE Name = '"+productName+"'");
+            ps=con.prepareStatement("SELECT Name, Price, Description, Warning, Information, Image, Quantity, DiscountMargin FROM product WHERE Name = '"+productName+"' AND Deleted = 0");
             rs = ps.executeQuery();
             
             while(rs.next())
@@ -481,8 +433,8 @@ public class ProductDAOImp implements ProductsDAOInterface {
         return tempIngred;
     }
 
-    @Override
-    public Recipe getRecipeItem(String productName, String ingredientName) 
+  
+    private Recipe getRecipeItem(String productName, String ingredientName) 
     {
         Recipe tempRecipe = new Recipe();
          try 
@@ -512,6 +464,168 @@ public class ProductDAOImp implements ProductsDAOInterface {
         
         return tempRecipe;
         
+    }
+
+    @Override
+    public ArrayList<Product> getProductsByCategory(Category category) 
+    {
+        
+         ArrayList<Product> tempProducts = new ArrayList<Product>();
+        Product tempProduct = null;
+        category.getCateId();
+        try 
+         {
+             myStmt = con.createStatement(); 
+             rs = myStmt.executeQuery("SELECT Product FROM categoryproduct WHERE Category = "+category.getCateId()+"");
+         } catch (SQLException ex) 
+         {
+             System.out.println("Error at : "+ex.getMessage());
+         }
+        
+        try 
+        {
+            while(rs.next())
+                {
+                    tempProducts.add(getProduct(rs.getString("Product")));
+                }
+        } catch (SQLException ex) 
+        {
+        }
+                
+        
+        return tempProducts;    
+    }
+    private boolean addProductRecipe(Recipe recipe) 
+    {
+        Recipe r1 ;
+        
+       
+            try {
+                ps = con.prepareStatement("INSERT INTO productingredient(Product, Ingredient, Unit) Values(?, ?, ? )");
+                ps.setString(1, recipe.getProduct());
+                ps.setString(2, recipe.getIngredient());
+                ps.setDouble(3, recipe.getMeasurement());
+                  
+                  ps.executeUpdate();
+            } catch (SQLException ex) 
+            {
+                System.out.println("");
+            }
+                
+            
+        return true;
+    }
+
+    @Override
+    public Category getCategory(Category category) 
+    {
+        Category tempCat = new Category();;
+        try 
+         {
+             myStmt = con.createStatement(); 
+             rs = myStmt.executeQuery("SELECT ID, Name FROM category WHERE ID = "+category.getCateId()+"");
+         } catch (SQLException ex) 
+         {
+             System.out.println("Error at : "+ex.getMessage());
+         }
+        try
+            {
+                while(rs.next())
+                    { 
+                        tempCat.setCateId(rs.getInt("ID"));
+                        tempCat.setName(rs.getString("Name"));
+                    }
+        }catch(SQLException ex)
+        {
+            System.out.println("Error at get Categories: "+ex.getMessage());
+        }
+        return tempCat;
+    }
+
+   
+
+    
+    private boolean addProductCategory(Category category, Product prod) 
+    {
+        
+        try
+            {
+                // Populating both the payment and the paymentusertable tables
+                 ps = con.prepareStatement("INSERT INTO categoryproduct(Category, Product) VALUES (?, ?)");
+                 ps.setString(1, prod.getName());
+                 ps.setString(2, prod.getDescription());
+                 ps.setDouble(3, 0.0);
+                 
+                 ps.executeUpdate();
+            }catch(SQLException ex)
+                {
+                    System.out.println("Error at  userPaymenttable : "+ex.getMessage());
+                    return false;
+                }
+        return true;
+        
+    }
+
+    
+    private ArrayList<Category> getAllCategoryOfProduct(Product prod) 
+    {
+        Category cat= null;
+        ArrayList<Category>categories=null;
+        try
+            {
+                ps = con.prepareStatement("SELECT Category FROM categoryproduct WHERE Product = '"+prod.getName()+"'");
+                rs = ps.executeQuery();
+                
+                ps = con.prepareStatement("SELECT Name FROM category WHERE ID = "+rs.getInt("Category")+"");
+                rs = ps.executeQuery();
+                while(rs.next())
+                    {
+                        cat.setCateId(rs.getInt(1));
+                        cat.setName(rs.getString(2));
+                        
+                        categories.add(cat);
+                    }
+            }catch(SQLException ex)
+                {
+                    System.out.print("Error : "+ex.getMessage());
+                }
+        finally
+            {
+                return categories;
+            }
+        
+    }
+
+    
+    private ArrayList<Product> getProductsByName(String name) 
+    {
+        ArrayList<Product>products = null;
+        Product product = null;
+        try
+            {
+                ps = con.prepareStatement("SELECT * FROM product WHERE name LIKE '%"+name+"%' AND Deleted = 0;");
+                rs = ps.executeQuery();
+                while(rs.next())
+                    {
+                        product.setName(rs.getString("Name"));
+                        product.setPrice(rs.getDouble("Price"));
+                        product.setDescription(rs.getString("Description"));
+                        product.setWarnings(rs.getString("Warning"));
+                        product.setNutritionalInformation(rs.getString("Information"));
+                        product.setPictureOfCreation(rs.getString("Image"));
+                        product.setQuantity(rs.getInt("Quantity"));
+                        product.setDiscountMargin(rs.getDouble("DiscountMargin"));
+                            
+                        products.add(product);
+                    }
+            }catch(SQLException ex)
+                {
+                    
+                }
+        finally
+            {
+                return products;
+            }
     }
     
 }
