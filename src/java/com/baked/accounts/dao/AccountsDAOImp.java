@@ -90,7 +90,16 @@ public class AccountsDAOImp implements AccountsDAOInterface {
         }
         
               
-        
+        try
+            {
+                if(ps.isClosed()!=true)
+                {
+                ps.close();
+                }
+            }catch(SQLException ex)
+                {
+                    System.out.println("Error : "+ex.getMessage());
+                }
         return tempUser;
     }
 
@@ -116,6 +125,16 @@ public class AccountsDAOImp implements AccountsDAOInterface {
              System.out.println("Error at Sign Up: "+ex.getMessage());
              return false;
          }
+         try
+            {
+                if(ps.isClosed()!=true)
+                {
+                ps.close();
+                }
+            }catch(SQLException ex)
+                {
+                    System.out.println("Error : "+ex.getMessage());
+                }
         return true;
     }
 
@@ -144,6 +163,16 @@ public class AccountsDAOImp implements AccountsDAOInterface {
              System.out.println("Error at Edit User Profile: "+ex.getMessage());
              return false;
          }
+       try
+            {
+                if(ps.isClosed()!=true)
+                {
+                ps.close();
+                }
+            }catch(SQLException ex)
+                {
+                    System.out.println("Error : "+ex.getMessage());
+                }
         return true;
     }
 
@@ -161,6 +190,16 @@ public class AccountsDAOImp implements AccountsDAOInterface {
              System.out.println("Error at Edit User Profile: "+ex.getMessage());
              return false;
          }
+         try
+            {
+                if(ps.isClosed()!=true)
+                {
+                ps.close();
+                }
+            }catch(SQLException ex)
+                {
+                    System.out.println("Error : "+ex.getMessage());
+                }
         return true;
         
     }
@@ -207,6 +246,16 @@ public class AccountsDAOImp implements AccountsDAOInterface {
         {
             System.out.println("Error at GetAll Users: "+ex.getMessage());
         }
+        try
+            {
+                if(ps.isClosed()!=true)
+                {
+                ps.close();
+                }
+            }catch(SQLException ex)
+                {
+                    System.out.println("Error : "+ex.getMessage());
+                }
         return tempUsers; // giving back the ArrayList here
     }
 
@@ -250,6 +299,16 @@ public class AccountsDAOImp implements AccountsDAOInterface {
         {
             System.out.println("Error at GetAll Users: "+ex.getMessage());
         }
+        try
+            {
+                if(ps.isClosed()!=true)
+                {
+                ps.close();
+                }
+            }catch(SQLException ex)
+                {
+                    System.out.println("Error : "+ex.getMessage());
+                }
         return tempUsers; // giving back the ArrayList here    
     }
 
@@ -287,6 +346,16 @@ public class AccountsDAOImp implements AccountsDAOInterface {
                     System.out.println("Error at GetAll Users userPaymenttable : "+ex.getMessage());
                     return false;
                 }
+        try
+            {
+                if(ps.isClosed()!=true)
+                {
+                ps.close();
+                }
+            }catch(SQLException ex)
+                {
+                    System.out.println("Error : "+ex.getMessage());
+                }
         return true;
     }
 
@@ -302,6 +371,16 @@ public class AccountsDAOImp implements AccountsDAOInterface {
                 {
                     System.out.println("Error at GetAll Users: "+ex.getMessage());
                     return false;
+                }
+        try
+            {
+                if(ps.isClosed()!=true)
+                {
+                ps.close();
+                }
+            }catch(SQLException ex)
+                {
+                    System.out.println("Error : "+ex.getMessage());
                 }
         return true;
     }
@@ -345,6 +424,16 @@ public class AccountsDAOImp implements AccountsDAOInterface {
         {
             System.out.println("Error at GetAll payments: "+ex.getMessage());
         }
+        try
+            {
+                if(ps.isClosed()!=true)
+                {
+                ps.close();
+                }
+            }catch(SQLException ex)
+                {
+                    System.out.println("Error : "+ex.getMessage());
+                }
         return tempPayments; // giving back the ArrayList here   
         
     }
@@ -382,6 +471,16 @@ public class AccountsDAOImp implements AccountsDAOInterface {
                 {
                     System.out.println("Error at addAddress : "+ex.getMessage());
                     return false;
+                }
+        try
+            {
+                if(ps.isClosed()!=true)
+                {
+                ps.close();
+                }
+            }catch(SQLException ex)
+                {
+                    System.out.println("Error : "+ex.getMessage());
                 }
         return true;
     }
@@ -421,6 +520,16 @@ public class AccountsDAOImp implements AccountsDAOInterface {
         {
             System.out.println("Error at GetAll getUserAddresses: "+ex.getMessage());
         }
+        try
+            {
+                if(ps.isClosed()!=true)
+                {
+                ps.close();
+                }
+            }catch(SQLException ex)
+                {
+                    System.out.println("Error : "+ex.getMessage());
+                }
         return tempAddresses; // giving back the ArrayList here   
     }
 
@@ -436,6 +545,16 @@ public class AccountsDAOImp implements AccountsDAOInterface {
                 {
                     System.out.println("Error at DeleteUserAddress: "+ex.getMessage());
                     return false;
+                }
+        try
+            {
+                if(ps.isClosed()!=true)
+                {
+                ps.close();
+                }
+            }catch(SQLException ex)
+                {
+                    System.out.println("Error : "+ex.getMessage());
                 }
         return true;
     }
@@ -475,6 +594,16 @@ public class AccountsDAOImp implements AccountsDAOInterface {
         {
             System.out.println("Error at GetAll getUserAddresses: "+ex.getMessage());
         }
+        try
+            {
+                if(ps.isClosed()!=true)
+                {
+                ps.close();
+                }
+            }catch(SQLException ex)
+                {
+                    System.out.println("Error : "+ex.getMessage());
+                }
         return tempAddresses; // giving back the ArrayList here  
     }
 
@@ -484,7 +613,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
     {
         try
             {
-                ps = con.prepareStatement("UPDATE user SET Password = '"+newPassword+"'"+" WHERE ID LIKE '"+userID+"'");
+                ps = con.prepareStatement("UPDATE user SET Password = '"+newPassword+"'"+" WHERE ID = '"+userID+"'");
                 ps.executeUpdate();
                 
             }
@@ -493,6 +622,16 @@ public class AccountsDAOImp implements AccountsDAOInterface {
              System.out.println("Error at Edit User Profile: "+ex.getMessage());
              return false;
          }
+        try
+            {
+                if(ps.isClosed()!=true)
+                {
+                ps.close();
+                }
+            }catch(SQLException ex)
+                {
+                    System.out.println("Error : "+ex.getMessage());
+                }
         return true;
     }
     

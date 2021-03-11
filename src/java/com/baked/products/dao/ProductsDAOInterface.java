@@ -11,7 +11,8 @@ import java.util.ArrayList;
  *
  * @author UnicornBrendan
  */
-public interface ProductsDAOInterface {
+public interface ProductsDAOInterface 
+{
     ArrayList<Recipe> getRecipes(String productName);
     boolean addProduct(Product product);
     ArrayList<Product> getAllProducts();
@@ -28,9 +29,10 @@ public interface ProductsDAOInterface {
     boolean deleteIngredient(String ingredientName);
     Product getProduct(String productName);
     Ingredient getIngredient(String ingredientName);
+    Category getCategory(Integer category);
     //Recipe getRecipeItem(String productName,String ingredientName);
     Category getCategory(Category category);
     //boolean addProductCategory(Category category, Product prod);
     //ArrayList<Category> getAllCategoryOfProduct(Product prod);
-    //ArrayList<Product> getProductsByName(String name);
+    ArrayList<Product> getProductsByName(String name);
 }

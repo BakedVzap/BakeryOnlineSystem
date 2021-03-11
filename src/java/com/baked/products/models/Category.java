@@ -13,7 +13,8 @@ public class Category {
         setName(name);
     }
     public Category(String name,int cateId){
-        
+        setName(name);
+        setCateId(cateId);
     }
     public Category(){}
 

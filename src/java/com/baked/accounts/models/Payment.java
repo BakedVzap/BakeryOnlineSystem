@@ -1,6 +1,8 @@
 
 package com.baked.accounts.models;
 
+import java.sql.Date;
+
 
 
 /**
@@ -9,12 +11,12 @@ package com.baked.accounts.models;
  */
 public class Payment {
     private String cardNumber;
-    private String expiryDate;
+    private Date expiryDate;
     private String cvvCode;
     private String cardType;
     private String userID;
     
-    public Payment(String cardNumber,String expiryDate,String cvvCode,String cardType,String userID ){
+    public Payment(String cardNumber,Date expiryDate,String cvvCode,String cardType,String userID ){
         setCardNumber(cardNumber);
         setExpiryDate(expiryDate);
         setCvvCode(cvvCode);
@@ -22,6 +24,7 @@ public class Payment {
         setUserID(userID);
         
     }
+    
     public Payment(){}
 
     /**
@@ -41,14 +44,14 @@ public class Payment {
     /**
      * @return the expiryDate
      */
-    public String getExpiryDate() {
+    public Date getExpiryDate() {
         return expiryDate;
     }
 
     /**
      * @param expiryDate the expiryDate to set
      */
-    public void setExpiryDate(String expiryDate) {
+    public void setExpiryDate(Date expiryDate) {
         this.setExpiryDate(expiryDate);
     }
 

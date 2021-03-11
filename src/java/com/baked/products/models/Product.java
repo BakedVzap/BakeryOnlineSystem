@@ -1,11 +1,16 @@
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.baked.products.models;
 
+import com.baked.products.models.Category;
 import java.util.ArrayList;
 
 /**
  *
- * @author UnicornBrendan
+ * @author khwezi
  */
 public class Product {
     private String name;
@@ -13,51 +18,42 @@ public class Product {
     private String warnings;
     private String nutritionalInformation;
     private String pictureOfCreation;
-    private Double price;
     private Integer quantity;
+    private ArrayList<Recipe> recipes;
+    private ArrayList<ProductCategory> categories;
+    private Double price;
     private Double discountMargin;
-    private ArrayList<Recipe>ingredients;
-    private ArrayList<Category>categories;
-    public Product(String name,Integer category){
+    
+    public Product(String name,String description,String warnings,String nutritionalInformation, String pictureOfCreation,Integer quantity,
+            ArrayList<Recipe>recipes,ArrayList<ProductCategory>categories,double price,double discountMargin){
         setName(name);
-    }
-
-    public Product(String name, String description, String warnings, String nutritionalInformation, String pictureOfCreation, Double price, Integer quantity, Double discountMargin, ArrayList<Recipe> ingredients, ArrayList<Category> categories) {
-        this.name = name;
-        this.description = description;
-        this.warnings = warnings;
-        this.nutritionalInformation = nutritionalInformation;
-        this.pictureOfCreation = pictureOfCreation;
-        this.price = price;
-        this.quantity = quantity;
-        this.discountMargin = discountMargin;
-        this.ingredients = ingredients;
-        this.categories = categories;
+        setDescription(description);
+        setWarnings(warnings);
+        setNutritionalInformation(nutritionalInformation);
+        setPictureOfCreation(pictureOfCreation);
+        setQuantity(quantity);
+        setRecipe(recipes);
+        setCategories(categories);
+        setPrice(price);
+        setDiscountMargin(discountMargin);
     }
     
-    public Product(String name,String description,double price,String warnings,String nutritionalInformation, String pictureOfCreation,Integer quantity){
+    public Product(String name,String description,String warnings,String nutritionalInformation, String pictureOfCreation,Integer quantity,
+            double price,double discountMargin){
         setName(name);
         setDescription(description);
-        setPrice(price);
         setWarnings(warnings);
         setNutritionalInformation(nutritionalInformation);
         setPictureOfCreation(pictureOfCreation);
         setQuantity(quantity);
-    }
-    public Product(String name,String description,double price,String warnings,String nutritionalInformation, String pictureOfCreation,Integer quantity, Integer category){
-        setName(name);
-        setDescription(description);
         setPrice(price);
-        setWarnings(warnings);
-        setNutritionalInformation(nutritionalInformation);
-        setPictureOfCreation(pictureOfCreation);
-        setQuantity(quantity);
+        setDiscountMargin(discountMargin);
     }
-
+    
+    public Product(){}
     /**
      * @return the name
      */
-    public Product(){}
     public String getName() {
         return name;
     }
@@ -142,44 +138,53 @@ public class Product {
     /**
      * @return the ingredients
      */
-    public ArrayList<Recipe> getIngredients() {
-        return ingredients;
+    public ArrayList<Recipe> getRecipes() {
+        return recipes;
     }
 
     /**
      * @param ingredients the ingredients to set
      */
-    public void setIngredients(ArrayList<Recipe> ingredients) {
-        this.ingredients = ingredients;
+    public void setRecipe(ArrayList<Recipe> recipes) {
+       this.recipes = recipes;
     }
-
-    /**
-     * @return the price
-     */
+    
     public Double getPrice() {
-        return price;
+    	return price;
     }
+    public void setPrice(Double price) {
+    	this.price=price;
+    }
+    
+    public ArrayList<ProductCategory> getCategories(){
+    	return categories;
+    }
+    public void setCategories(ArrayList<ProductCategory> categories) {
+    	this.categories=categories;
+    }
+	@Override
+	public String toString() {
+		return "Product [name=" + name + ", description=" + description + ", warnings=" + warnings
+				+ ", nutritionalInformation=" + nutritionalInformation + ", pictureOfCreation=" + pictureOfCreation
+				+ ", quantity=" + quantity + ", ingredients=" + recipes + ", price=" + price + "]";
+	}
 
     /**
-     * @param price the price to set
+     * @param recipes the recipes to set
      */
-    public void setPrice(Double price) {
-        this.price = price;
-    }
+   
 
+    /**
+     * @return the discountMargin
+     */
     public Double getDiscountMargin() {
         return discountMargin;
     }
 
+    /**
+     * @param discountMargin the discountMargin to set
+     */
     public void setDiscountMargin(Double discountMargin) {
         this.discountMargin = discountMargin;
-    }
-
-    public ArrayList<Category> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(ArrayList<Category> categories) {
-        this.categories = categories;
     }
 }

@@ -15,6 +15,11 @@ public class Recipe {
         setIngredient(ingredient);
         setMeasurement(measurement);
     }
+    public Recipe(){}
+    public Recipe(String ingredient,double measurement){
+          setIngredient(ingredient);
+          setMeasurement(measurement);
+    }
 
     /**
      * @return the product
@@ -22,8 +27,7 @@ public class Recipe {
     public String getProduct() {
         return product;
     }
-    
-    public Recipe(){}
+
     /**
      * @param product the product to set
      */

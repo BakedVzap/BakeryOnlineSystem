@@ -5,17 +5,14 @@ package com.baked.products.models;
 public class ProductCategory {
 
     private String productId;
-    private String categoryId;
+    private Integer categoryId;
     //**************************************************************************
-    public ProductCategory(Product prod, Category cat ) {
-        this.productId = prod.getName();
-        this.categoryId=cat.getName();
+    public ProductCategory(String prod, int cat ) {
+      setProductId(prod);
+      setCategoryId(cat);
     }   
-    public ProductCategory(Product prod){
-        this.productId = prod.getName();
-    }
-    public ProductCategory(Category cat){
-        this.categoryId = cat.getName();
+    public ProductCategory(int cat){
+         setCategoryId(cat);
     }
     public ProductCategory(){}
     
@@ -23,16 +20,16 @@ public class ProductCategory {
         return productId;
     }
 
-    public void setProductId(Product productId) {
-        this.productId = productId.getName();
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
-    public String getCategoryId() {
+    public int getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(Category categoryId) {
-        this.categoryId = categoryId.getName();
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     @Override

@@ -12,10 +12,19 @@ package com.baked.ordering.models;
 public class OrderLineItem {
     private String product;
     private Integer quantity;
+    private Integer order;
+    private Integer id;
     
     public OrderLineItem(String product,int quantity){
         setProduct(product);
         setQuantity(quantity);
+    }
+
+    public OrderLineItem(String product, Integer quantity, Integer order, Integer id) {
+        this.product = product;
+        this.quantity = quantity;
+        this.order = order;
+        this.id = id;
     }
 
     /**
@@ -44,6 +53,22 @@ public class OrderLineItem {
      */
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
     
 }
