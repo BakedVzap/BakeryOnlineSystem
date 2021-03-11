@@ -321,7 +321,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
                 // Populating both the payment and the paymentusertable tables
                  ps = con.prepareStatement("INSERT INTO payment( CardNo , ExpiryDate, CVV, Type, User) VALUES (?, ?, ?, ?, ? )");
                  ps.setString(1, payment.getCardNumber());
-                 ps.setString(2, payment.getExpiryDate());
+                 ps.setDate(2, payment.getExpiryDate());
                  ps.setString(3, payment.getCvvCode());
                  ps.setString(4, payment.getCardType());
                  ps.setString(5, payment.getUserID());
@@ -412,7 +412,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
                         tempPayment = new Payment();
                         //Assigning all fields from the result set to new template
                         tempPayment.setCardNumber(rs.getString("CardNo"));
-                        tempPayment.setExpiryDate(rs.getString("ExpiryDate"));
+                        tempPayment.setExpiryDate(rs.getDate("ExpiryDate"));
                         tempPayment.setCvvCode(rs.getString("CVV"));
                         tempPayment.setCardType(rs.getString("Type"));
                         tempPayment.setUserID(rs.getString("User"));

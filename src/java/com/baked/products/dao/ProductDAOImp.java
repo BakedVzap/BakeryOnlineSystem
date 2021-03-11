@@ -42,7 +42,7 @@ public class ProductDAOImp implements ProductsDAOInterface {
         try 
          {
             // myStmt = con.createStatement();
-             con = DBManager.getConnection();
+            // con = DBManager.getConnection();
              ps=con.prepareStatement("SELECT Product , Ingredient, Unit FROM productingredient WHERE Product LIKE '%"+productName+"%'");
              
              
@@ -665,6 +665,7 @@ public class ProductDAOImp implements ProductsDAOInterface {
                     product.setPictureOfCreation(rs.getString("Image"));
                     product.setQuantity(rs.getInt("Quantity"));
                     product.setDiscountMargin(rs.getDouble("DiscountMargin"));
+                    product.setDeleted(false);
                     
                 }
         } catch (SQLException ex) 
@@ -853,7 +854,7 @@ public class ProductDAOImp implements ProductsDAOInterface {
         try 
          {
              ps = con.prepareStatement("SELECT ID, Name FROM category WHERE ID = "+category+"");
-            rs= ps.executeQuery();
+             rs= ps.executeQuery();
 //             myStmt = con.createStatement(); 
 //             rs = myStmt.executeQuery("SELECT ID, Name FROM category WHERE ID = "+category+"");
          } catch (SQLException ex) 
@@ -886,41 +887,41 @@ public class ProductDAOImp implements ProductsDAOInterface {
 
    
 
-    @Override
-    public Category getCategory(Category category) 
-    {
-        Category tempCat = new Category();
-        try 
-         {
-             myStmt = con.createStatement(); 
-             rs = myStmt.executeQuery("SELECT ID, Name FROM category WHERE ID = "+category.getCateId()+"");
-         } catch (SQLException ex) 
-         {
-             System.out.println("Error at : "+ex.getMessage());
-         }
-        try
-            {
-                while(rs.next())
-                    { 
-                        tempCat.setCateId(rs.getInt("ID"));
-                        tempCat.setName(rs.getString("Name"));
-                    }
-        }catch(SQLException ex)
-        {
-            System.out.println("Error at get Categories: "+ex.getMessage());
-        }
-        try
-            {
-                if(ps.isClosed()!=true)
-                {
-                ps.close();
-                }
-            }catch(SQLException ex)
-                {
-                    System.out.println("Error : "+ex.getMessage());
-                }
-        return tempCat;
-    }
+//    @Override
+//    public Category getCategory(Category category) 
+//    {
+//        Category tempCat = new Category();
+//        try 
+//         {
+//             myStmt = con.createStatement(); 
+//             rs = myStmt.executeQuery("SELECT ID, Name FROM category WHERE ID = "+category.getCateId()+"");
+//         } catch (SQLException ex) 
+//         {
+//             System.out.println("Error at : "+ex.getMessage());
+//         }
+//        try
+//            {
+//                while(rs.next())
+//                    { 
+//                        tempCat.setCateId(rs.getInt("ID"));
+//                        tempCat.setName(rs.getString("Name"));
+//                    }
+//        }catch(SQLException ex)
+//        {
+//            System.out.println("Error at get Categories: "+ex.getMessage());
+//        }
+//        try
+//            {
+//                if(ps.isClosed()!=true)
+//                {
+//                ps.close();
+//                }
+//            }catch(SQLException ex)
+//                {
+//                    System.out.println("Error : "+ex.getMessage());
+//                }
+//        return tempCat;
+//    }
 
    
 

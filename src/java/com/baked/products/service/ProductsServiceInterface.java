@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Rt Netwa
+ * @author 
  */
 public interface ProductsServiceInterface {
     boolean addProduct(Product product);

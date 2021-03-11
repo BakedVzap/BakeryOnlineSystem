@@ -23,6 +23,21 @@ public class Product {
     private ArrayList<ProductCategory> categories;
     private Double price;
     private Double discountMargin;
+    private Boolean deleted;
+
+    public Product(String name, String description, String warnings, String nutritionalInformation, String pictureOfCreation, Integer quantity, ArrayList<Recipe> recipes, ArrayList<ProductCategory> categories, Double price, Double discountMargin, Boolean deleted) {
+        this.name = name;
+        this.description = description;
+        this.warnings = warnings;
+        this.nutritionalInformation = nutritionalInformation;
+        this.pictureOfCreation = pictureOfCreation;
+        this.quantity = quantity;
+        this.recipes = recipes;
+        this.categories = categories;
+        this.price = price;
+        this.discountMargin = discountMargin;
+        this.deleted = deleted;
+    }
     
     public Product(String name,String description,String warnings,String nutritionalInformation, String pictureOfCreation,Integer quantity,
             ArrayList<Recipe>recipes,ArrayList<ProductCategory>categories,double price,double discountMargin){
@@ -186,5 +201,13 @@ public class Product {
      */
     public void setDiscountMargin(Double discountMargin) {
         this.discountMargin = discountMargin;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }
