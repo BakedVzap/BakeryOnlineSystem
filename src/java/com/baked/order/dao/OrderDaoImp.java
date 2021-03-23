@@ -10,8 +10,6 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
-
 /**
  *
  * @author UnicornBrendan
@@ -27,7 +25,7 @@ public class OrderDaoImp implements OrderDaoInterface {
 
     public OrderDaoImp() {
         try {
-            con = DBManager.getConnection(); 
+            con = DBManager.getConnection();
 
             if (con != null) {
                 System.out.println("Your connection to The Dough Knot Database is not null and your program is connected");
@@ -43,31 +41,31 @@ public class OrderDaoImp implements OrderDaoInterface {
 
     //////////////////***********METHOD ONE*************/////////////////////////////
     @Override
-    public boolean addOrder(Order order) { 
-        boolean isOk = true; 
+    public boolean addOrder(Order order) {
+        boolean isOk = true;
         try {
-            if (con != null) { 
-                con.setAutoCommit(false); 
-                ps = con.prepareStatement("INSERT INTO orders ( TotalPrice, User, Address, Payment, Deleted) VALUES(?,?,?,?,?)"); 
-                ps.setDouble(1, order.getTotalPrice()); 
-                ps.setString(2, order.getUser()); 
-                ps.setString(3, order.getAddress()); 
-                ps.setString(4, order.getPayment()); 
+            if (con != null) {
+                con.setAutoCommit(false);
+                ps = con.prepareStatement("INSERT INTO orders ( TotalPrice, User, Address, Payment, Deleted) VALUES(?,?,?,?,?)");
+                ps.setDouble(1, order.getTotalPrice());
+                ps.setString(2, order.getUser());
+                ps.setString(3, order.getAddress());
+                ps.setString(4, order.getPayment());
                 ps.setBoolean(5, false);
 
-                int i = ps.executeUpdate(); 
+                int i = ps.executeUpdate();
                 if (i < 1) {
-                    return !isOk; 
+                    return !isOk;
                 }
-               
+
                 ps1 = con.prepareStatement("INSERT INTO orderlineitem ( Quantity, product, OrderID) VALUES"
                         + "(?, ?, (SELECT MAX(ID)) FROM orders)");
                 for (OrderLineItem o : order.getItems()) {
-                    try { 
-                        ps1.setInt(1, o.getQuantity()); 
-                        
-                        ps1.setString(3, o.getProduct());  
-                        if (ps1.executeUpdate() < 1) { 
+                    try {
+                        ps1.setInt(1, o.getQuantity());
+
+                        ps1.setString(3, o.getProduct());
+                        if (ps1.executeUpdate() < 1) {
                             isOk = false;
                             break;
                         }
@@ -81,18 +79,18 @@ public class OrderDaoImp implements OrderDaoInterface {
         } finally {
 
             try {
-                if (con != null) { 
+                if (con != null) {
                     if (isOk) {
-                        con.commit(); 
+                        con.commit();
                     } else {
-                        con.rollback(); 
+                        con.rollback();
                     }
-                    con.setAutoCommit(true); 
+                    con.setAutoCommit(true);
                 }
-                if (ps != null) { 
+                if (ps != null) {
                     ps.close();
                 }
-                if (ps1 != null) { 
+                if (ps1 != null) {
                     ps1.close();
                 }
             } catch (SQLException ex) { // don't print stack trace
@@ -109,7 +107,7 @@ public class OrderDaoImp implements OrderDaoInterface {
     public Order getOrder(Integer OrderId) {
 
         Order order = null;
-        ArrayList<OrderLineItem> list = new ArrayList<OrderLineItem>();
+        ArrayList<OrderLineItem> list = new ArrayList<>();
         OrderLineItem item = null;
         try {
             if (con != null) {
@@ -125,17 +123,17 @@ public class OrderDaoImp implements OrderDaoInterface {
                             /*#1*/
                             order.setId(OrderId); // primary key Int
                             /*#2*/
-                            order.setTotalPrice(rs.getDouble("TotalPrice")); 
+                            order.setTotalPrice(rs.getDouble("TotalPrice"));
                             /*#3*/
                             order.setOrderDate(rs.getDate("OrderDate"));
                             /*#4*/
-                            order.setDeliveryDate(rs.getDate("DeliveryDate")); 
+                            order.setDeliveryDate(rs.getDate("DeliveryDate"));
                             /*#5*/
-                            order.setUser(rs.getString("User")); 
+                            order.setUser(rs.getString("User"));
                             /*#6*/
-                            order.setAddress(rs.getString("Address")); 
+                            order.setAddress(rs.getString("Address"));
                             /*#7*/
-                            order.setPayment(rs.getString("Payment")); 
+                            order.setPayment(rs.getString("Payment"));
 
                         } catch (SQLException ex) {
                             System.out.println("Error at creating Order from database data : " + ex.getMessage());
@@ -145,26 +143,31 @@ public class OrderDaoImp implements OrderDaoInterface {
                 }
                 if (con != null) {
                     ps1 = con.prepareStatement("SELECT Quantity, OrderID, Product FROM orderlineitem WHERE OrderID = ?");
-                    ps1.setInt(1, order.getId());
-                    rs1 = ps1.executeQuery(); 
-                    if (rs1 != null) 
+                    if(order!=null)
                     {
+                    ps1.setInt(1, order.getId());
+                    } else {System.out.println("order was null");}
+                    rs1 = ps1.executeQuery();
+                    if (rs1 != null) {
                         while (rs1.next()) {
-                            try { 
+                            try {
                                 item = new OrderLineItem();
-                               
+
                                 item.setQuantity(rs1.getInt("Quantity"));
-                                item.setOrder(rs1.getInt("OrderID")); 
+                                item.setOrder(rs1.getInt("OrderID"));
                                 item.setProduct(rs1.getString("Product"));
 
-                                list.add(item); 
+                                list.add(item);
                             } catch (SQLException ex) {
                                 System.out.println("Error at : " + ex.getMessage());
                             }
                         }
                     }
                 }
-                order.setItems(list); 
+                if(list!=null || order!=null){
+                    order.setItems(list);
+                }else {System.out.println("List is empty");}
+                
             }
         } catch (SQLException ex) {
             System.out.println("Error at adding OrderLineItem : " + ex.getMessage());
@@ -213,13 +216,15 @@ public class OrderDaoImp implements OrderDaoInterface {
                 if (con != null) {
                     try {
                         con.close();
-                    } catch (SQLException ex) { System.out.println("Error at : "+ex.getMessage());
+                    } catch (SQLException ex) {
+                        System.out.println("Error at : " + ex.getMessage());
                     }
                 }
                 if (ps != null) {
                     try {
                         ps.close();
-                    } catch (SQLException ex) { System.out.println("Error at : "+ex.getMessage());
+                    } catch (SQLException ex) {
+                        System.out.println("Error at : " + ex.getMessage());
                     }
                 }
             }
@@ -355,7 +360,7 @@ public class OrderDaoImp implements OrderDaoInterface {
     //////////////////***********METHOD FOUR*************/////////////////////////////
     @Override
     public ArrayList<Order> getPendingOrders() {
-        ArrayList<Order> list = new ArrayList<Order>();
+        ArrayList<Order> list = new ArrayList<>();
         Order order = null;
         try {
             if (con != null) {
@@ -479,7 +484,7 @@ public class OrderDaoImp implements OrderDaoInterface {
     //////////////////***********METHOD FIVE*************/////////////////////////////
     @Override
     public ArrayList<Order> getOrdersBetween(Date deliveryDate, Date orderDate) {
-        ArrayList<Order> list = new ArrayList<Order>();
+        ArrayList<Order> list = new ArrayList<>();
         Order order = null;
 
         try {

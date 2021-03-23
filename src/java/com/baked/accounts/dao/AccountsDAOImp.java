@@ -78,7 +78,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
                 if (con != null) {
                     try {
                         con.close();
-                    } catch (Exception e) {
+                    } catch (SQLException e) {
                         System.out.println("Error Closing Connection at" + e.getMessage());
                     }
                 }
@@ -120,7 +120,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
                 if (con != null) {
                     try {
                         con.close();
-                    } catch (Exception e) {
+                    } catch (SQLException e) {
                         System.out.println("Error Closing Connection at" + e.getMessage());
                     }
                 }
@@ -163,7 +163,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
                 if (con != null) {
                     try {
                         con.close();
-                    } catch (Exception e) {
+                    } catch (SQLException e) {
                         System.out.println("Error Closing Connection at" + e.getMessage());
                     }
                 }
@@ -181,7 +181,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
     @Override
     public boolean deleteUser(String userId) {
         try {
-           
+
             ps = con.prepareStatement("DELETE * FROM user WHERE ID = '" + userId + "'");
             int i = ps.executeUpdate();
             if (i < 1) {
@@ -196,7 +196,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
                 if (con != null) {
                     try {
                         con.close();
-                    } catch (Exception e) {
+                    } catch (SQLException e) {
                         System.out.println("Error Closing Connection at" + e.getMessage());
                     }
                 }
@@ -214,12 +214,12 @@ public class AccountsDAOImp implements AccountsDAOInterface {
     /////**********************************************************///// 
     @Override
     public ArrayList<User> getAllUsers() {
-        
-        ArrayList<User> tempUsers = new ArrayList<User>();
-       
+
+        ArrayList<User> tempUsers = new ArrayList<>();
+
         User tempUser;
         try {
-           
+
             ps = con.prepareStatement("SELECT Name, Surname, Password, Title, Role, ID, HomeNo, MobileNo, Email, ProfilePicture FROM user");
             rs = ps.executeQuery();
         } catch (SQLException ex) {
@@ -229,9 +229,9 @@ public class AccountsDAOImp implements AccountsDAOInterface {
 
             while (rs.next()) {
                 if (rs != null) {
-                    
+
                     tempUser = new User();
-                   
+
                     tempUser.setName(rs.getString("Name"));
                     tempUser.setSurname(rs.getString("Surname"));
                     tempUser.setPassword(rs.getString("Password"));
@@ -242,62 +242,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
                     tempUser.setMobileTelephoneNumber(rs.getString("MobileNo"));
                     tempUser.setEmailAddress(rs.getString("Email"));
                     tempUser.setProfilePicture(rs.getString("ProfilePicture"));
-                    
-                    tempUsers.add(tempUser);
-                }
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error at GetAll Users: " + ex.getMessage());
-        } finally {
-            try {
-                if (con != null) {
-                    try {
-                        con.close();
-                    } catch (Exception e) {
-                        System.out.println("Error Closing Connection at" + e.getMessage());
-                    }
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println("Error : " + ex.getMessage());
-            }
-        }
-        return tempUsers; // giving back the ArrayList here
-    }
 
-    /////**********************************************************///// 
-    @Override
-    public ArrayList<User> getUserByName(String name) {
-
-        ArrayList<User> tempUsers = new ArrayList<User>();
-        User tempUser;
-        try {
-            ps = con.prepareStatement("SELECT Name, Surname, Password, Title, Role, ID, HomeNo, MobileNo, Email, ProfilePicture FROM user WHERE Name = ?");
-            ps.setString(1, name);
-            rs = ps.executeQuery();
-        } catch (SQLException ex) {
-            System.out.println("Error at : " + ex.getMessage());
-        }
-        try {
-            
-            while (rs.next()) {
-                if (rs != null) {
-                    
-                    tempUser = new User();
-                    
-                    tempUser.setName(rs.getString("Name"));
-                    tempUser.setSurname(rs.getString("Surname"));
-                    tempUser.setPassword(rs.getString("Password"));
-                    tempUser.setTitle(rs.getString("Title"));
-                    tempUser.setRole(rs.getInt("Role"));
-                    tempUser.setIdNumber(rs.getString("ID"));
-                    tempUser.setHomeTelephoneNumber(rs.getString("HomeNo"));
-                    tempUser.setMobileTelephoneNumber(rs.getString("MobileNo"));
-                    tempUser.setEmailAddress(rs.getString("Email"));
-                    tempUser.setProfilePicture(rs.getString("ProfilePicture"));
-                    
                     tempUsers.add(tempUser);
                 }
             }
@@ -319,14 +264,69 @@ public class AccountsDAOImp implements AccountsDAOInterface {
                 System.out.println("Error : " + ex.getMessage());
             }
         }
-        return tempUsers;    
+        return tempUsers; // giving back the ArrayList here
+    }
+
+    /////**********************************************************///// 
+    @Override
+    public ArrayList<User> getUserByName(String name) {
+
+        ArrayList<User> tempUsers = new ArrayList<>();
+        User tempUser;
+        try {
+            ps = con.prepareStatement("SELECT Name, Surname, Password, Title, Role, ID, HomeNo, MobileNo, Email, ProfilePicture FROM user WHERE Name = ?");
+            ps.setString(1, name);
+            rs = ps.executeQuery();
+        } catch (SQLException ex) {
+            System.out.println("Error at : " + ex.getMessage());
+        }
+        try {
+
+            while (rs.next()) {
+                if (rs != null) {
+
+                    tempUser = new User();
+
+                    tempUser.setName(rs.getString("Name"));
+                    tempUser.setSurname(rs.getString("Surname"));
+                    tempUser.setPassword(rs.getString("Password"));
+                    tempUser.setTitle(rs.getString("Title"));
+                    tempUser.setRole(rs.getInt("Role"));
+                    tempUser.setIdNumber(rs.getString("ID"));
+                    tempUser.setHomeTelephoneNumber(rs.getString("HomeNo"));
+                    tempUser.setMobileTelephoneNumber(rs.getString("MobileNo"));
+                    tempUser.setEmailAddress(rs.getString("Email"));
+                    tempUser.setProfilePicture(rs.getString("ProfilePicture"));
+
+                    tempUsers.add(tempUser);
+                }
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error at GetAll Users: " + ex.getMessage());
+        } finally {
+            try {
+                if (con != null) {
+                    try {
+                        con.close();
+                    } catch (SQLException e) {
+                        System.out.println("Error Closing Connection at" + e.getMessage());
+                    }
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException ex) {
+                System.out.println("Error : " + ex.getMessage());
+            }
+        }
+        return tempUsers;
     }
 
     /////*************************this works*********************************///// 
     @Override
     public boolean addUserPayment(Payment payment) {
         try {
-            
+
             ps = con.prepareStatement("INSERT INTO payment( CardNo , ExpiryDate, CVV, Type, User) VALUES (?, ?, ?, ?, ? )");
             ps.setString(1, payment.getCardNumber());
             ps.setDate(2, payment.getExpiryDate());
@@ -341,7 +341,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
         }
 
         try {
-            
+
             ps = con.prepareStatement("INSERT INTO paymentusertable( CardNo, User) VALUES (?, ?)");
             ps.setString(1, payment.getCardNumber());
             ps.setString(2, payment.getUserID());
@@ -417,7 +417,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
                 while (rs.next()) {
                     if (rs != null) {
                         order = new Order();
-                        
+
                         order.setId(rs.getInt("ID"));
                         order.setTotalPrice(rs.getDouble("TotalPrice"));
                         order.setOrderDate(rs.getDate("OrderDate"));
@@ -452,7 +452,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
 
     @Override
     public ArrayList<Order> getUserOrders(User user) {
-        ArrayList<Order> list = new ArrayList<Order>();
+        ArrayList<Order> list = new ArrayList<>();
         Order order = null;
 
         try {
@@ -516,7 +516,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
 /////*****************************************************************/////
     @Override
     public ArrayList<Payment> getAllUserPayments(String userID) {
-        ArrayList<Payment> tempPayments = new ArrayList<Payment>();
+        ArrayList<Payment> tempPayments = new ArrayList<>();
         Payment tempPayment;
         try {
             ps = con.prepareStatement("SELECT CardNo, ExpiryDate, CVV, Type, User FROM payment WHERE User = ?");
@@ -550,7 +550,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
                 if (con != null) {
                     try {
                         con.close();
-                    } catch (Exception e) {
+                    } catch (SQLException e) {
                         System.out.println("Error Closing Connection at" + e.getMessage());
                     }
                 }
@@ -602,7 +602,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
                 if (con != null) {
                     try {
                         con.close();
-                    } catch (Exception e) {
+                    } catch (SQLException e) {
                         System.out.println("Error Closing Connection at" + e.getMessage());
                     }
                 }
@@ -619,7 +619,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
     /////**********************************************************///// 
     @Override
     public ArrayList<Address> getUserAddress(String userID) {
-        ArrayList<Address> tempAddresses = new ArrayList<Address>();
+        ArrayList<Address> tempAddresses = new ArrayList<>();
         Address tempAddress;
         try {
             ps = con.prepareStatement("SELECT ID, StreetNo, Street, Suberb, City FROM address WHERE ID = ?");
@@ -655,7 +655,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
                 if (con != null) {
                     try {
                         con.close();
-                    } catch (Exception e) {
+                    } catch (SQLException e) {
                         System.out.println("Error Closing Connection at" + e.getMessage());
                     }
                 }
@@ -688,7 +688,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
                 if (con != null) {
                     try {
                         con.close();
-                    } catch (Exception e) {
+                    } catch (SQLException e) {
                         System.out.println("Error Closing Connection at" + e.getMessage());
                     }
                 }
@@ -705,7 +705,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
     /////**********************************************************///// 
     @Override
     public ArrayList<Address> getAllUserAddress(String userID) {
-        ArrayList<Address> tempAddresses = new ArrayList<Address>();
+        ArrayList<Address> tempAddresses = new ArrayList<>();
         Address tempAddress;
         try {
             ps = con.prepareStatement("SELECT ID, StreetNo, Street, Suberb, City FROM address");
@@ -739,7 +739,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
                 if (con != null) {
                     try {
                         con.close();
-                    } catch (Exception e) {
+                    } catch (SQLException e) {
                         System.out.println("Error Closing Connection at" + e.getMessage());
                     }
                 }
@@ -775,7 +775,7 @@ public class AccountsDAOImp implements AccountsDAOInterface {
                 if (con != null) {
                     try {
                         con.close();
-                    } catch (Exception e) {
+                    } catch (SQLException e) {
                         System.out.println("Error Closing Connection at" + e.getMessage());
                     }
                 }
