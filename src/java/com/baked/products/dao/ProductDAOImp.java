@@ -3,22 +3,15 @@ package com.baked.products.dao;
 
 import com.baked.databaseManager.DBManager;
 import com.baked.products.models.Category;
-//import testproductdao.Category;
 import com.baked.products.models.Ingredient;
 import com.baked.products.models.Product;
 import com.baked.products.models.ProductCategory;
 import com.baked.products.models.Recipe;
-// import com.mysql.jdbc.PreparedStatement; //
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-//import testproductdao.ProductCategory;
 
 /**
  *
@@ -28,10 +21,22 @@ public class ProductDAOImp implements ProductsDAOInterface {
     private Connection con;
     private PreparedStatement ps;
     private ResultSet rs;
-    private Statement myStmt;
+    
     public ProductDAOImp() throws SQLException
     {
-            con = DBManager.getConnection();
+           try 
+         {
+             con = DBManager.getConnection();
+             
+            if (con != null) {
+                System.out.println("Your connection to The Dough Knot Database is not null and your program is connected");
+            }
+            if (con == null) {
+                System.out.println("Your connection to The Dough Knot Database is null and your program is not conected");
+            }
+        } catch (SQLException ex) {
+            System.out.println("Connection not established");
+        }
     }
 
     @Override
@@ -41,17 +46,16 @@ public class ProductDAOImp implements ProductsDAOInterface {
          Recipe tempRecipe;
         try 
          {
-            // myStmt = con.createStatement();
-            // con = DBManager.getConnection();
-             ps=con.prepareStatement("SELECT Product , Ingredient, Unit FROM productingredient WHERE Product LIKE '%"+productName+"%'");
-             
-             
+             ps=con.prepareStatement("SELECT Product , Ingredient, Unit FROM productingredient WHERE Product = ?");
+             ps.setString(1, productName);
              rs = ps.executeQuery();
          } catch (SQLException ex) 
          {
              System.out.println("Error at : "+ex.getMessage());
          }
+        if (rs!=null){
         try
+            
             {
                 while(rs.next())
                     { 
@@ -59,23 +63,27 @@ public class ProductDAOImp implements ProductsDAOInterface {
                         tempRecipe.setProduct(rs.getString("Product"));
                         tempRecipe.setIngredient(rs.getString("Ingredient"));
                         tempRecipe.setMeasurement(rs.getDouble("Unit"));
-                     
-                        
                         tempRecipes.add(tempRecipe);
                 }
+            
         }catch(SQLException ex)
         {
             System.out.println("Error at GetAll getUserAddresses: "+ex.getMessage());
         }
-        finally{
-            if(con!=null && ps!=null) {
-                try{
+        finally
+        {
+            if(con!=null && ps!=null) 
+            {
+                try
+                {
                     ps.close();
                     con.close();
-                }catch(SQLException e) {
-                    e.printStackTrace();
+                }catch(SQLException e) 
+                {
+                    e.getMessage();
                 }
             } 
+        }
         }
         return tempRecipes;   
     }
@@ -96,10 +104,13 @@ public class ProductDAOImp implements ProductsDAOInterface {
             ps.setInt(7,product.getQuantity());
             ps.setDouble(8,product.getDiscountMargin());
             ps.setBoolean(9,false);
-            
-            if(ps.executeUpdate()==1)
+            int i = ps.executeUpdate();
+            if(i>=1)
             {
+                if(ps!=null)
+                {
                 ps.close();
+                }
                if(addRecipes(product.getRecipes(),product.getName()))
                {
                   if(addProductCategories(product.getCategories(),product.getName()))
@@ -118,6 +129,23 @@ public class ProductDAOImp implements ProductsDAOInterface {
             } catch (SQLException ex1) {
                 System.out.println(ex1.getMessage());
             }
+        } finally
+        {
+         try
+            {
+                if(con!=null)
+                {
+                    try{con.close();}catch(Exception e){System.out.println("Error Closing Connection at"+e.getMessage());}
+                }
+                if(ps!=null)
+                {
+                ps.close();
+                }
+               
+            }catch(SQLException ex)
+                {
+                    System.out.println("Error : "+ex.getMessage());
+                }
         }
         
         return false;
@@ -174,7 +202,27 @@ public class ProductDAOImp implements ProductsDAOInterface {
               }
           } catch (SQLException ex) 
           {
-          }
+          }finally
+        {
+         try
+            {
+                if(con!=null)
+                {
+                    try{con.close();}catch(Exception e){System.out.println("Error Closing Connection at"+e.getMessage());}
+                }
+                if(ps!=null)
+                {
+                ps.close();
+                }
+                if(rs!=null)
+                {
+                    rs.close();
+                }
+            }catch(SQLException ex)
+                {
+                    System.out.println("Error : "+ex.getMessage());
+                }
+        }
           try {
               rs.close();
           } catch (SQLException ex) 
@@ -364,17 +412,27 @@ public class ProductDAOImp implements ProductsDAOInterface {
          {
              System.out.println("Error at Edit Product : "+ex.getMessage());
              return false;
-         }
-        try
+         }finally
+        {
+         try
             {
-                if(ps.isClosed()!=true)
+                if(con!=null)
+                {
+                    try{con.close();}catch(SQLException e){System.out.println("Error Closing Connection at"+e.getMessage());}
+                }
+                if(ps!=null)
                 {
                 ps.close();
+                }
+                if(rs!=null)
+                {
+                    rs.close();
                 }
             }catch(SQLException ex)
                 {
                     System.out.println("Error : "+ex.getMessage());
                 }
+        }
         return true;
     }
 
@@ -390,17 +448,27 @@ public class ProductDAOImp implements ProductsDAOInterface {
             }catch(SQLException ex)
             {
                 System.out.println("Error at category add :"+ex.getMessage());
-            }
-        try
+            }finally
+        {
+         try
             {
-                if(ps.isClosed()!=true)
+                if(con!=null)
+                {
+                    try{con.close();}catch(Exception e){System.out.println("Error Closing Connection at"+e.getMessage());}
+                }
+                if(ps!=null)
                 {
                 ps.close();
+                }
+                if(rs!=null)
+                {
+                    rs.close();
                 }
             }catch(SQLException ex)
                 {
                     System.out.println("Error : "+ex.getMessage());
                 }
+        }
         return true;
     }
 
@@ -431,17 +499,27 @@ public class ProductDAOImp implements ProductsDAOInterface {
         }catch(SQLException ex)
         {
             System.out.println("Error at Get Categories: "+ex.getMessage());
-        }
-        try
+        }finally
+        {
+         try
             {
-                if(ps.isClosed()!=true)
+                if(con!=null)
+                {
+                    try{con.close();}catch(Exception e){System.out.println("Error Closing Connection at"+e.getMessage());}
+                }
+                if(ps!=null)
                 {
                 ps.close();
+                }
+                if(rs!=null)
+                {
+                    rs.close();
                 }
             }catch(SQLException ex)
                 {
                     System.out.println("Error : "+ex.getMessage());
                 }
+        }
         return tempCats; 
     }
 
@@ -463,17 +541,27 @@ public class ProductDAOImp implements ProductsDAOInterface {
          {
              System.out.println("Error at Edit Category: "+ex.getMessage());
              return false;
-         }
-        try
+         }finally
+        {
+         try
             {
-                if(ps.isClosed()!=true)
+                if(con!=null)
+                {
+                    try{con.close();}catch(Exception e){System.out.println("Error Closing Connection at"+e.getMessage());}
+                }
+                if(ps!=null)
                 {
                 ps.close();
+                }
+                if(rs!=null)
+                {
+                    rs.close();
                 }
             }catch(SQLException ex)
                 {
                     System.out.println("Error : "+ex.getMessage());
                 }
+        }
         return true;
     }
 
@@ -489,17 +577,27 @@ public class ProductDAOImp implements ProductsDAOInterface {
             }catch(SQLException ex)
             {
                 System.out.println("Error at category add :"+ex.getMessage());
-            }
+            }finally
+        {
          try
             {
-                if(ps.isClosed()!=true)
+                if(con!=null)
+                {
+                    try{con.close();}catch(Exception e){System.out.println("Error Closing Connection at"+e.getMessage());}
+                }
+                if(ps!=null)
                 {
                 ps.close();
+                }
+                if(rs!=null)
+                {
+                    rs.close();
                 }
             }catch(SQLException ex)
                 {
                     System.out.println("Error : "+ex.getMessage());
                 }
+        }
         return true;
     }
 
@@ -514,17 +612,27 @@ public class ProductDAOImp implements ProductsDAOInterface {
          {
              System.out.println("Error at Edit User Profile: "+ex.getMessage());
              return false;
-         }
+         }finally
+        {
          try
             {
-                if(ps.isClosed()!=true)
+                if(con!=null)
+                {
+                    try{con.close();}catch(Exception e){System.out.println("Error Closing Connection at"+e.getMessage());}
+                }
+                if(ps!=null)
                 {
                 ps.close();
+                }
+                if(rs!=null)
+                {
+                    rs.close();
                 }
             }catch(SQLException ex)
                 {
                     System.out.println("Error : "+ex.getMessage());
                 }
+        }
         return true;
     }
 
@@ -545,21 +653,25 @@ public class ProductDAOImp implements ProductsDAOInterface {
                 } catch (SQLException ex) 
                     {
                         System.out.println("");
-                    } finally
+                    }finally
+                    {
+                     try
                         {
-                            return true;
-                        }
+                            if(con!=null)
+                            {
+                                try{con.close();}catch(SQLException e){System.out.println("Error Closing Connection at"+e.getMessage());}
+                            }
+                            if(ps!=null)
+                            {
+                            ps.close();
+                            }
+                            
+                        }catch(SQLException ex)
+                            {
+                                System.out.println("Error : "+ex.getMessage());
+                            }
+                    }
             }
-        try
-            {
-                if(ps.isClosed()!=true)
-                {
-                ps.close();
-                }
-            }catch(SQLException ex)
-                {
-                    System.out.println("Error : "+ex.getMessage());
-                }
        return true;
     }
 
@@ -569,8 +681,9 @@ public class ProductDAOImp implements ProductsDAOInterface {
         String id = ingred.getName();
         try
             {
-                ps = con.prepareStatement("UPDATE ingredient SET Quantity = '"+ingred.getQuantity()+"'"
-                        + " WHERE Name LIKE '"+id+"'");
+                ps = con.prepareStatement("UPDATE ingredient SET Quantity = ? WHERE Name LIKE ?");
+                ps.setDouble(1, ingred.getQuantity());
+                ps.setString(2, id);
                 ps.executeUpdate();
                 
             }
@@ -578,17 +691,24 @@ public class ProductDAOImp implements ProductsDAOInterface {
          {
              System.out.println("Error at Edit Product : "+ex.getMessage());
              return false;
-         }
-        try
+         }finally
+        {
+         try
             {
-                if(ps.isClosed()!=true)
+                if(con!=null)
+                {
+                    try{con.close();}catch(Exception e){System.out.println("Error Closing Connection at"+e.getMessage());}
+                }
+                if(ps!=null)
                 {
                 ps.close();
                 }
+                
             }catch(SQLException ex)
                 {
                     System.out.println("Error : "+ex.getMessage());
                 }
+        }
         return true;
     }
 
@@ -599,23 +719,48 @@ public class ProductDAOImp implements ProductsDAOInterface {
         Ingredient tempIngred=null;
         try 
          {
-             ps = con.prepareStatement("SELECT Name, Quantity FROM ingredient"); 
-           //  rs = myStmt.executeQuery("SELECT Name, Quantity FROM ingredient");
-           rs = ps.executeQuery();
+            ps = con.prepareStatement("SELECT Name, Quantity FROM ingredient"); 
+            rs = ps.executeQuery();
          } catch (SQLException ex) 
          {
              System.out.println("Error at : "+ex.getMessage());
          }
         try
             {
+                if(rs!=null)
+                {
                 while(rs.next())
                     { 
-                        tempIngred = new Ingredient(rs.getString("Name"),rs.getDouble("Quantity"));
-                        tempIngreds.add(tempIngred);
+                       
+                            tempIngred = new Ingredient(rs.getString("Name"),rs.getDouble("Quantity"));
+                            tempIngreds.add(tempIngred);
+                        
                     }
+                }
         }catch(SQLException ex)
         {
             System.out.println("Error at GetAll Users: "+ex.getMessage());
+        }
+        finally
+        {
+         try
+            {
+                if(con!=null)
+                {
+                    try{con.close();}catch(Exception e){System.out.println("Error Closing Connection at"+e.getMessage());}
+                }
+                if(ps!=null)
+                {
+                ps.close();
+                }
+                if(rs!=null)
+                {
+                    rs.close();
+                }
+            }catch(SQLException ex)
+                {
+                    System.out.println("Error : "+ex.getMessage());
+                }
         }
         return tempIngreds;
     }
@@ -632,16 +777,24 @@ public class ProductDAOImp implements ProductsDAOInterface {
              System.out.println("Error at Edit User Profile: "+ex.getMessage());
              return false;
          }
-        try
+        finally
+        {
+         try
             {
-                if(ps.isClosed()!=true)
+                if(con!=null)
+                {
+                    try{con.close();}catch(Exception e){System.out.println("Error Closing Connection at"+e.getMessage());}
+                }
+                if(ps!=null)
                 {
                 ps.close();
                 }
+                
             }catch(SQLException ex)
                 {
                     System.out.println("Error : "+ex.getMessage());
                 }
+        }
         return true;
     }
 
@@ -653,7 +806,8 @@ public class ProductDAOImp implements ProductsDAOInterface {
         try {
             ps=con.prepareStatement("SELECT Name, Price, Description, Warning, Information, Image, Quantity, DiscountMargin FROM product WHERE Name = '"+productName+"' AND Deleted = 0");
             rs = ps.executeQuery();
-            
+            if(rs!=null)
+            {
             while(rs.next())
                 {
                     product = new Product();
@@ -668,21 +822,38 @@ public class ProductDAOImp implements ProductsDAOInterface {
                     product.setDeleted(false);
                     
                 }
+            }
         } catch (SQLException ex) 
                 {
                     System.out.println("Error at Edit User Profile returning blank: "+ex.getMessage());
                     return new Product();
-                }
-        try
+                }finally
+        {
+         try
             {
-                if(ps.isClosed()!=true)
+                if(con!=null)
+                {
+                    try{con.close();}catch(Exception e){System.out.println("Error Closing Connection at"+e.getMessage());}
+                }
+                if(ps!=null)
                 {
                 ps.close();
+                }
+                if(rs!=null)
+                {
+                    rs.close();
                 }
             }catch(SQLException ex)
                 {
                     System.out.println("Error : "+ex.getMessage());
                 }
+        }
+       
+              product.setCategories(getProductCategories(product.getName()));
+          
+          
+              product.setRecipe(getProductIngredient(product.getName()));
+          
         return product;
     }
 
@@ -703,34 +874,46 @@ public class ProductDAOImp implements ProductsDAOInterface {
             {
                 while(rs.next())
                 {
-                    tempIngred.setName(rs.getString("Name"));
-                    tempIngred.setQuantity(rs.getDouble("Quantity"));
-                    if((rs.getInt(3))==0)
-                        {
-                            tempIngred.setDeleted(false);
-                        }
-                    if((rs.getInt(3))==1)
-                        {
-                            tempIngred.setDeleted(true);
-                        }
+                    if(rs!=null)
+                    {
+                        tempIngred.setName(rs.getString("Name"));
+                        tempIngred.setQuantity(rs.getDouble("Quantity"));
+                        if((rs.getInt(3))==0)
+                            {
+                                tempIngred.setDeleted(false);
+                            }
+                        if((rs.getInt(3))==1)
+                            {
+                                tempIngred.setDeleted(true);
+                            }
+                    }
                 }
                 
         }catch(SQLException ex)
         {
             System.out.println("Error at get Ingredient x: "+ex.getMessage());
         }
-        
-              
-        try
+        finally
+        {
+         try
             {
-                if(ps.isClosed()!=true)
+                if(con!=null)
+                {
+                    try{con.close();}catch(Exception e){System.out.println("Error Closing Connection at"+e.getMessage());}
+                }
+                if(ps!=null)
                 {
                 ps.close();
+                }
+                if(rs!=null)
+                {
+                    rs.close();
                 }
             }catch(SQLException ex)
                 {
                     System.out.println("Error : "+ex.getMessage());
                 }
+        }
         return tempIngred;
     }
 
@@ -751,9 +934,12 @@ public class ProductDAOImp implements ProductsDAOInterface {
             {
                 while(rs.next())
                 {
-                    tempRecipe.setProduct(rs.getString("Product"));
-                    tempRecipe.setIngredient(rs.getString("Ingredient"));
-                    tempRecipe.setMeasurement(rs.getDouble("Unit"));
+                    if(rs!= null)
+                    {
+                        tempRecipe.setProduct(rs.getString("Product"));
+                        tempRecipe.setIngredient(rs.getString("Ingredient"));
+                        tempRecipe.setMeasurement(rs.getDouble("Unit"));
+                    }
                 }
                 
         }catch(SQLException ex)
@@ -762,16 +948,27 @@ public class ProductDAOImp implements ProductsDAOInterface {
         }
         
               
-        try
+        finally
+        {
+         try
             {
-                if(ps.isClosed()!=true)
+                if(con!=null)
+                {
+                    try{con.close();}catch(Exception e){System.out.println("Error Closing Connection at"+e.getMessage());}
+                }
+                if(ps!=null)
                 {
                 ps.close();
+                }
+                if(rs!=null)
+                {
+                    rs.close();
                 }
             }catch(SQLException ex)
                 {
                     System.out.println("Error : "+ex.getMessage());
                 }
+        }
         return tempRecipe;
         
     }
@@ -780,13 +977,11 @@ public class ProductDAOImp implements ProductsDAOInterface {
     public ArrayList<Product> getProductsByCategory(Category category) 
     {
         
-         ArrayList<Product> tempProducts = new ArrayList<Product>();
-        Product tempProduct = null;
-        category.getCateId();
+            ArrayList<Product> tempProducts = new ArrayList<Product>();
+            Product tempProduct = null;
+            category.getCateId();
         try 
          {
-            // myStmt = con.createStatement(); 
-            // rs = myStmt.executeQuery("SELECT Product FROM categoryproduct WHERE Category = "+category.getCateId()+"");
              ps = con.prepareStatement("SELECT Product FROM categoryproduct WHERE Category = "+category.getCateId()+"");
              rs = ps.executeQuery();
              
@@ -799,22 +994,35 @@ public class ProductDAOImp implements ProductsDAOInterface {
         {
             while(rs.next())
                 {
-                    tempProducts.add(getProduct(rs.getString("Product")));
+                    if(rs!=null)
+                    {
+                        tempProducts.add(getProduct(rs.getString("Product")));
+                    }
                 }
         } catch (SQLException ex) 
         {
         }
-                
-        try
+         finally
+        {
+         try
             {
-                if(ps.isClosed()!=true)
+                if(con!=null)
+                {
+                    try{con.close();}catch(Exception e){System.out.println("Error Closing Connection at"+e.getMessage());}
+                }
+                if(ps!=null)
                 {
                 ps.close();
+                }
+                if(rs!=null)
+                {
+                    rs.close();
                 }
             }catch(SQLException ex)
                 {
                     System.out.println("Error : "+ex.getMessage());
                 }
+        }
         return tempProducts;    
     }
     private boolean addProductRecipe(Recipe recipe) 
@@ -822,28 +1030,40 @@ public class ProductDAOImp implements ProductsDAOInterface {
         Recipe r1 ;
         
        
-            try {
+            try 
+            {
                 ps = con.prepareStatement("INSERT INTO productingredient(Product, Ingredient, Unit) Values(?, ?, ? )");
-                ps.setString(1, recipe.getProduct());
-                ps.setString(2, recipe.getIngredient());
-                ps.setDouble(3, recipe.getMeasurement());
+                if(ps!=null)
+                {
+                    ps.setString(1, recipe.getProduct());
+                    ps.setString(2, recipe.getIngredient());
+                    ps.setDouble(3, recipe.getMeasurement());
                   
                   ps.executeUpdate();
+            }
             } catch (SQLException ex) 
             {
                 System.out.println("");
             }
                 
-           try
+          finally
+        {
+         try
             {
-                if(ps.isClosed()!=true)
+                if(con!=null)
+                {
+                    try{con.close();}catch(Exception e){System.out.println("Error Closing Connection at"+e.getMessage());}
+                }
+                if(ps!=null)
                 {
                 ps.close();
                 }
+                
             }catch(SQLException ex)
                 {
                     System.out.println("Error : "+ex.getMessage());
-                } 
+                }
+        }
         return true;
     }
 
@@ -855,8 +1075,7 @@ public class ProductDAOImp implements ProductsDAOInterface {
          {
              ps = con.prepareStatement("SELECT ID, Name FROM category WHERE ID = "+category+"");
              rs= ps.executeQuery();
-//             myStmt = con.createStatement(); 
-//             rs = myStmt.executeQuery("SELECT ID, Name FROM category WHERE ID = "+category+"");
+
          } catch (SQLException ex) 
          {
              System.out.println("Error at : "+ex.getMessage());
@@ -865,8 +1084,11 @@ public class ProductDAOImp implements ProductsDAOInterface {
             {
                 while(rs.next())
                     { 
-                        tempCat.setCateId(rs.getInt("ID"));
-                        tempCat.setName(rs.getString("Name"));
+                        if(rs!=null)
+                        {
+                            tempCat.setCateId(rs.getInt("ID"));
+                            tempCat.setName(rs.getString("Name"));
+                        }
                     }
         }catch(SQLException ex)
         {
@@ -876,7 +1098,7 @@ public class ProductDAOImp implements ProductsDAOInterface {
             {
                 if(ps.isClosed()!=true)
                 {
-                ps.close();
+                    ps.close();
                 }
             }catch(SQLException ex)
                 {
@@ -942,16 +1164,24 @@ public class ProductDAOImp implements ProductsDAOInterface {
                     System.out.println("Error at  add product Category : "+ex.getMessage());
                     return false;
                 }
-        try
+        finally
+        {
+         try
             {
-                if(ps.isClosed()!=true)
+                if(con!=null)
+                {
+                    try{con.close();}catch(SQLException e){System.out.println("Error Closing Connection at"+e.getMessage());}
+                }
+                if(ps!=null)
                 {
                 ps.close();
                 }
+               
             }catch(SQLException ex)
                 {
                     System.out.println("Error : "+ex.getMessage());
                 }
+        }
         return true;
         
     }
@@ -960,7 +1190,7 @@ public class ProductDAOImp implements ProductsDAOInterface {
     private ArrayList<Category> getAllCategoryOfProduct(Product prod) 
     {
         Category cat= null;
-        ArrayList<Category>categories=null;
+        ArrayList<Category>categories= new ArrayList<Category>();
         try
             {
                 ps = con.prepareStatement("SELECT Category FROM categoryproduct WHERE Product = '"+prod.getName()+"'");
@@ -968,76 +1198,103 @@ public class ProductDAOImp implements ProductsDAOInterface {
                 
                 ps = con.prepareStatement("SELECT Name FROM category WHERE ID = "+rs.getInt("Category")+"");
                 rs = ps.executeQuery();
+                if(rs!=null){
                 while(rs.next())
                     {
-                        cat.setCateId(rs.getInt(1));
-                        cat.setName(rs.getString(2));
                         
-                        categories.add(cat);
+                            cat.setCateId(rs.getInt(1));
+                            cat.setName(rs.getString(2));
+
+                            categories.add(cat);
+                        }
                     }
             }catch(SQLException ex)
                 {
                     System.out.print("Error : "+ex.getMessage());
                 }
         finally
+        {
+         try
             {
-                try
-            {
-                if(ps.isClosed()!=true)
+                if(con!=null)
+                {
+                    try{con.close();}catch(SQLException e){System.out.println("Error Closing Connection at"+e.getMessage());}
+                }
+                if(ps!=null)
                 {
                 ps.close();
+                }
+                if(rs!=null)
+                {
+                    rs.close();
                 }
             }catch(SQLException ex)
                 {
                     System.out.println("Error : "+ex.getMessage());
                 }
+        }
                 return categories;
             }
         
-    }
-
     @Override
     public ArrayList<Product> getProductsByName(String name) 
     {
-        ArrayList<Product>products = null;
+        ArrayList<Product>products = new ArrayList<Product>();
         Product product = null;
+        
         try
             {
                 ps = con.prepareStatement("SELECT * FROM product WHERE name LIKE '%"+name+"%' AND Deleted = 0");
                 rs = ps.executeQuery();
+                if(rs!=null)
+                { 
+                    
                 while(rs.next())
                     {
-                        product.setName(rs.getString("Name"));
-                        product.setPrice(rs.getDouble("Price"));
-                        product.setDescription(rs.getString("Description"));
-                        product.setWarnings(rs.getString("Warning"));
-                        product.setNutritionalInformation(rs.getString("Information"));
-                        product.setPictureOfCreation(rs.getString("Image"));
-                        product.setQuantity(rs.getInt("Quantity"));
-                        product.setDiscountMargin(rs.getDouble("DiscountMargin"));
-                           
-                        products.add(product);
+                        product = new Product();
+                        
+                            product.setName(rs.getString("Name"));
+                            product.setPrice(rs.getDouble("Price"));
+                            product.setDescription(rs.getString("Description"));
+                            product.setWarnings(rs.getString("Warning"));
+                            product.setNutritionalInformation(rs.getString("Information"));
+                            product.setPictureOfCreation(rs.getString("Image"));
+                            product.setQuantity(rs.getInt("Quantity"));
+                            product.setDiscountMargin(rs.getDouble("DiscountMargin"));
+
+                            products.add(product);
+                        
                     }
+                }
             }catch(SQLException ex)
                 {
                     System.out.println(" Error :"+ex.getMessage());
                 }
         finally
+        {
+         try
             {
-                try
-            {
-                if(ps.isClosed()!=true)
+                if(con!=null)
+                {
+                    try{con.close();}catch(SQLException e){System.out.println("Error Closing Connection at"+e.getMessage());}
+                }
+                if(ps!=null)
                 {
                 ps.close();
+                }
+                if(rs!=null)
+                {
+                    rs.close();
                 }
             }catch(SQLException ex)
                 {
                     System.out.println("Error : "+ex.getMessage());
                 }
+        }
                 return products;
             }
     }
 
+
     
-    
-}
+

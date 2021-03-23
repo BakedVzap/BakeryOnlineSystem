@@ -1,280 +1,547 @@
-
 package com.baked.order.dao;
 
-import com.baked.accounts.models.Address;
-import com.baked.accounts.models.Payment;
-import com.baked.accounts.models.User;
+import com.baked.databaseManager.DBManager;
 import com.baked.ordering.models.Order;
 import com.baked.ordering.models.OrderLineItem;
 import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Date;
+
 
 /**
  *
  * @author UnicornBrendan
  */
-public class OrderDaoImp implements OrderDaoInterface
-{
-     private Connection con;
-     private PreparedStatement ps;
-     private ResultSet rs;
-     private Statement myStmt;
+public class OrderDaoImp implements OrderDaoInterface {
 
-    public OrderDaoImp() 
-    {
-        try 
-         {
-            Class.forName("com.mysql.jdbc.Driver");
-         } catch (ClassNotFoundException ex) 
-         {
-            System.out.println("Driver not found");
-            System.exit(0);
-         }
-         // connection test successful
-        String url = "jdbc:mysql://localhost:3306/TheDoughKnot";
-        try 
-        {
-            con = DriverManager.getConnection(url, "root", "root");
-        } catch (SQLException ex) 
-        {
+    private Connection con;
+
+    private PreparedStatement ps;
+    private PreparedStatement ps1;
+    private ResultSet rs;
+    private ResultSet rs1;
+
+    public OrderDaoImp() {
+        try {
+            con = DBManager.getConnection(); 
+
+            if (con != null) {
+                System.out.println("Your connection to The Dough Knot Database is not null and your program is connected");
+            }
+            if (con == null) {
+                System.out.println("Your connection to The Dough Knot Database is null and your program is not conected");
+            }
+        } catch (SQLException ex) {
             System.out.println("Connection not established");
         }
+
     }
 
+    //////////////////***********METHOD ONE*************/////////////////////////////
     @Override
-    public boolean addOrder(Order order) 
-    {
-        try
-            {
-                ps = con.prepareStatement("INSERT INTO order ID, TotalPrice, OrderDate, DeliveryDate, User, Address, Payment, Delivered, Deleted VALUES(?, ?, ?, ?, ?, ?, ?, ?, ? )");
-                ps.setInt(1, order.getId());
-                ps.setDouble(2, order.getTotalPrice());
-                ps.setDate(3, order.getOrderDate());
-                ps.setDate(4, order.getDeliveryDate());
-                ps.setString(5, order.getUser().getIdNumber());
-                ps.setString(6, order.getAddress().getId());
-                ps.setString(7, order.getPayment().getCardNumber());
-                if((order.getDelivered())==true)
-                        {
-                            ps.setInt(8,1);
-                        }
-                if((order.getDelivered())==false)
-                        {
-                            ps.setInt(8,0);
-                        }
-                if((order.getDeleted())==true)
-                        {
-                            ps.setInt(9,1);
-                        }
-                if((order.getDeleted())==false)
-                        {
-                            ps.setInt(9,0);
-                        }
-                
-                ps.executeUpdate();
-                
-            }catch(SQLException ex)
-                {
-                    System.out.println("Error : "+ex.getMessage());
+    public boolean addOrder(Order order) { 
+        boolean isOk = true; 
+        try {
+            if (con != null) { 
+                con.setAutoCommit(false); 
+                ps = con.prepareStatement("INSERT INTO orders ( TotalPrice, User, Address, Payment, Deleted) VALUES(?,?,?,?,?)"); 
+                ps.setDouble(1, order.getTotalPrice()); 
+                ps.setString(2, order.getUser()); 
+                ps.setString(3, order.getAddress()); 
+                ps.setString(4, order.getPayment()); 
+                ps.setBoolean(5, false);
+
+                int i = ps.executeUpdate(); 
+                if (i < 1) {
+                    return !isOk; 
                 }
-        finally
-            {
-               // ArrayList<OrderLineItem> list = new ArrayList<OrderLineItem>();
-                for(OrderLineItem o : order.getItems())
-                    {
-                         try
-                            {
-                                ps = con.prepareStatement("INSERT INTO orderlineitem ID, Quantity, Order, Product VALUES(?, ?, ?, ?)");
-                                ps.setInt(1, o.getId());
-                                ps.setInt(2, o.getQuantity());
-                                ps.setInt(3, o.getOrder());
-                                ps.setString(4, o.getProduct());
-                                ps.executeUpdate();
-                            }
-                        catch(SQLException ex)
-                            {
-                                System.out.println("Error : "+ex.getMessage());
-                            }
-                    }
                
-            }
-        
-        try
-            {
-                ps.close();
-            }catch(SQLException ex)
-                {
-                    System.out.println("Error : "+ex.getMessage());
-                }
-        return true;
-    }
-
-    @Override
-    public boolean setDeliveryDate(Integer orderId, Date deliveryDate) 
-    {
-         try {
-             ps = con.prepareStatement("UPDATE order SET Delivered = 1 WHERE ID = "+orderId+"" );
-             ps.executeUpdate();
-         } catch (SQLException ex) 
-         {
-             System.out.println("Error : "+ex.getMessage());
-         }
-            try
-            {
-                ps = con.prepareStatement("UPDATE order SET DeliveryDate = "+deliveryDate+" WHERE ID = "+orderId+"");
-                ps.executeUpdate();
-            }catch(SQLException ex)
-            {
-                System.out.println("Error : "+ex.getMessage());
-            }
-            try
-              {
-                  ps.close();
-              }
-            catch(SQLException ex)
-                  {
-                      System.out.println("Error : "+ex.getMessage());
-                  }
-        return true;
-    }
-
-    @Override
-    public ArrayList<Order> getAllOrders() 
-    {
-        ArrayList<Order> list = null;
-        Order order = null;
-        Address address = null;
-        Payment payment = null ;
-        User user = null;
-        try
-            {
-                ps = con.prepareStatement("SELECT ID, TotalPrice, OrderDate, DeliveredDate, User, Address, Payment, Delivered, Deleted FROM order ");
-                rs = ps.executeQuery();
-                while(rs.next())
-                    {
-                        order = new Order();
-                  //order has 9 Columns
-                  /*#1*/order.setId(rs.getInt("ID"));
-                  /*#2*/order.setTotalPrice(rs.getDouble("TotalPrice"));
-                  /*#3*/order.setOrderDate(rs.getDate("OrderDate"));
-                  /*#4*/order.setDeliveryDate(rs.getDate("DeliveryDate"));
-                  // Now Fetching Data from the user table and Creating the User Pojo
-                  PreparedStatement ps2 = con.prepareStatement("SELECT * FROM user WHERE ID = '"+rs.getString("User")+"' ");
-                  ResultSet rs2 = ps2.executeQuery();
-                  while(rs2.next())
-                    {
-                        // User has 10 Columns
-                        user = new User();
-            /*#1.1*/      user.setName(rs.getString("Name"));
-            /*#1.2*/      user.setSurname(rs.getString("Surname"));
-            /*#1.3*/      user.setPassword(rs.getString("Password"));
-            /*#1.4*/      user.setTitle(rs.getString("Title"));
-            /*#1.5*/      user.setRole(rs.getInt("Role"));
-            /*#1.6*/      user.setIdNumber(rs.getString("ID"));
-            /*#1.7*/      user.setHomeTelephoneNumber(rs.getString("HomeNo"));
-            /*#1.8*/      user.setMobileTelephoneNumber(rs.getString("MobileNo"));
-            /*#1.9*/      user.setEmailAddress(rs.getString("Email"));
-            /*#1.10*/     user.setProfilePicture(rs.getString("Profilepicture"));
-                    }
-                  /*#5*/order.setUser(user);
-                  
-                  // Now Fetching Data from the address table and Creating the Address Pojo
-                  PreparedStatement ps3 = con.prepareStatement("SELECT * FROM address WHERE ID = '"+rs.getString("Address")+"' ");
-                  ResultSet rs3 = ps3.executeQuery();
-                  while(rs3.next())
-                    {
+                ps1 = con.prepareStatement("INSERT INTO orderlineitem ( Quantity, product, OrderID) VALUES"
+                        + "(?, ?, (SELECT MAX(ID)) FROM orders)");
+                for (OrderLineItem o : order.getItems()) {
+                    try { 
+                        ps1.setInt(1, o.getQuantity()); 
                         
-                        // Address has 5 Columns
-                        address = new Address();
-            /*#2.1*/      address.setId(rs3.getString("ID"));      
-            /*#2.2*/      address.setStreetNumber(rs3.getString("StreetNo"));
-            /*#2.3*/      address.setStreetName(rs3.getString("Street"));
-            /*#2.4*/      address.setSuberb(rs3.getString("Suberb"));
-            /*#2.5*/      address.setCity(rs3.getString("City"));
+                        ps1.setString(3, o.getProduct());  
+                        if (ps1.executeUpdate() < 1) { 
+                            isOk = false;
+                            break;
+                        }
+                    } catch (SQLException ex) {
+                        System.out.println("Error : " + ex.getMessage());
                     }
-                  /*#6*/order.setAddress(address);
-                  
-                  // Now Fetching Data from the payment table and Creating the Payment pojo
-                  PreparedStatement ps4 = con.prepareStatement("SELECT * FROM payment WHERE CardNo = '"+rs.getString("Payment")+"' ");
-                  ResultSet rs4 = ps4.executeQuery();
-                  while(rs4.next())
-                    {
-                        // Payment has 5 Columns
-                        payment = new Payment();
-            /*#3.1*/      payment.setCardNumber(rs4.getString("CardNo"));
-            /*#3.2*/      payment.setExpiryDate(rs4.getDate("ExpiryDate"));
-            /*#3.3*/      payment.setCvvCode(rs4.getString("CVV"));
-            /*#3.4*/      payment.setCardType(rs4.getString("Type"));
-            /*#3.5*/      payment.setUserID(rs4.getString("User"));
-                    }
-                  /*#7*/order.setPayment(payment);
-                  try
-                  {
-                  if((rs.getInt("Delivered"))==1)
-                  {
-                    /*#8*/     order.setDelivered(true);
-                  }
-                  if((rs.getInt("Delivered"))==0)
-                  {
-                    /*#8*/     order.setDelivered(false);
-                  }
-                  if((rs.getInt("Deleted"))==1)
-                  {
-                      /*#9*/     order.setDeleted(true);
-                  }
-                  if((rs.getInt("Deleted"))==0)
-                  {
-                    /*#9*/     order.setDeleted(false);
-                  } 
-                  }
-                  catch(SQLException ex)
-                    {
-                            System.out.println("Error at : "+ex.getMessage());
-                    }
-                  
-                  
-                  list.add(order);
-                    
-                    }// end of while loop
-            }catch(SQLException ex)
-            {
-                
+                }
             }
-        
+        } catch (SQLException ex) {
+            System.out.println("Error : " + ex.getMessage());
+        } finally {
+
+            try {
+                if (con != null) { 
+                    if (isOk) {
+                        con.commit(); 
+                    } else {
+                        con.rollback(); 
+                    }
+                    con.setAutoCommit(true); 
+                }
+                if (ps != null) { 
+                    ps.close();
+                }
+                if (ps1 != null) { 
+                    ps1.close();
+                }
+            } catch (SQLException ex) { // don't print stack trace
+                System.out.println("Error : " + ex.getMessage());
+
+            }
+        }
+
+        return isOk;
+    }
+//////////////////***********METHOD SIX*************/////////////////////////////
+
+    @Override
+    public Order getOrder(Integer OrderId) {
+
+        Order order = null;
+        ArrayList<OrderLineItem> list = new ArrayList<OrderLineItem>();
+        OrderLineItem item = null;
+        try {
+            if (con != null) {
+                ps = con.prepareStatement("SELECT ID, TotalPrice, OrderDate, DeliveryDate, user, address, Payment  FROM orders WHERE ID=? AND Deleted=0");
+                ps.setInt(1, OrderId);
+                rs = ps.executeQuery();
+                if (rs != null) {
+                    while (rs.next()) {
+                        try {
+
+                            order = new Order();
+                            //order has 9 Columns
+                            /*#1*/
+                            order.setId(OrderId); // primary key Int
+                            /*#2*/
+                            order.setTotalPrice(rs.getDouble("TotalPrice")); 
+                            /*#3*/
+                            order.setOrderDate(rs.getDate("OrderDate"));
+                            /*#4*/
+                            order.setDeliveryDate(rs.getDate("DeliveryDate")); 
+                            /*#5*/
+                            order.setUser(rs.getString("User")); 
+                            /*#6*/
+                            order.setAddress(rs.getString("Address")); 
+                            /*#7*/
+                            order.setPayment(rs.getString("Payment")); 
+
+                        } catch (SQLException ex) {
+                            System.out.println("Error at creating Order from database data : " + ex.getMessage());
+                        }
+
+                    }// end of while loop
+                }
+                if (con != null) {
+                    ps1 = con.prepareStatement("SELECT Quantity, OrderID, Product FROM orderlineitem WHERE OrderID = ?");
+                    ps1.setInt(1, order.getId());
+                    rs1 = ps1.executeQuery(); 
+                    if (rs1 != null) 
+                    {
+                        while (rs1.next()) {
+                            try { 
+                                item = new OrderLineItem();
+                               
+                                item.setQuantity(rs1.getInt("Quantity"));
+                                item.setOrder(rs1.getInt("OrderID")); 
+                                item.setProduct(rs1.getString("Product"));
+
+                                list.add(item); 
+                            } catch (SQLException ex) {
+                                System.out.println("Error at : " + ex.getMessage());
+                            }
+                        }
+                    }
+                }
+                order.setItems(list); 
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error at adding OrderLineItem : " + ex.getMessage());
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+
+                }
+            }
+            try {
+
+                if (ps1 != null) {
+                    ps1.close();
+                }
+                if (rs1 != null) {
+                    rs1.close();
+                }
+
+                if (ps != null) {
+                    ps.close();
+                }
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException ex) {
+                System.out.println("Error : " + ex.getMessage());
+            }
+        }
+        return order;
+
+    }
+
+    //////////////////***********METHOD TWO*************/////////////////////////////
+    @Override
+    public boolean setDeliveryDate(Integer orderId) {
+        if (con != null) {
+            int rows = 0;
+            try {
+                ps = con.prepareStatement("UPDATE orders set DeliveryDate = CURRENT_TIMESTAMP where ID = ?");
+                ps.setInt(1, orderId);
+                rows = ps.executeUpdate();
+            } catch (SQLException ex) {
+            } finally {
+                if (con != null) {
+                    try {
+                        con.close();
+                    } catch (SQLException ex) { System.out.println("Error at : "+ex.getMessage());
+                    }
+                }
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) { System.out.println("Error at : "+ex.getMessage());
+                    }
+                }
+            }
+            return rows == 1; // only one update
+        }
+        return false;
+    }
+
+//    @Override
+//    public boolean setDeliveryDate(Integer orderId, Date deliveryDate) {}            ///////// REPLACED
+//        try {
+//            if (con != null) {
+//                ps = con.prepareStatement("UPDATE orders SET DeliveryDate = CURRENT_TIMESTAMP WHERE ID = ?");
+//                ps.setInt(1, orderId);
+//                ps.executeUpdate();
+//            }
+//        } catch (SQLException ex) {
+//            System.out.println("Error : " + ex.getMessage());
+//        }
+//        try {
+//            ps = con.prepareStatement("UPDATE orders SET DeliveryDate = ? WHERE ID = ?");
+//            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss"); // this is the same as NOW() in sql
+//            String dateString = formatter.format(deliveryDate);
+//
+//            ps.setString(1, dateString); // is it possible to save as String ? SQL Date Error , make sure
+//            ps.setInt(2, orderId);
+//            ps.executeUpdate();
+//        } catch (SQLException ex) {
+//            System.out.println("Error : " + ex.getMessage());
+//        }
+//        try {
+//            if (ps != null) {
+//                ps.close();
+//            }
+//        } catch (SQLException ex) {
+//            System.out.println("Error : " + ex.getMessage());
+//        }
+//        try {
+//            if (con!= null) {
+//                con.close();
+//            }
+//        } catch (SQLException ex) {
+//            System.out.println("Error : " + ex.getMessage());
+//        }
+//
+//        return true;
+//    }
+    private ArrayList<OrderLineItem> getOrderLineItems(Integer orderId) {
+        ArrayList<OrderLineItem> items = new ArrayList();
+        if (con != null) {
+            PreparedStatement ps1 = null;
+            ResultSet rs1 = null;
+
+            try {
+                ps1 = con.prepareStatement("Select Product,Quantity from orderlineitem where ID = ?");
+                ps1.setInt(1, orderId);
+                rs1 = ps1.executeQuery();
+                while (rs1.next()) {
+                    items.add(new OrderLineItem(rs1.getString("Product"), rs1.getInt("Quantity")));
+                }
+            } catch (SQLException ex) {
+
+            } finally {
+                if (ps1 != null) {
+                    try {
+                        ps1.close();
+                    } catch (SQLException ex) {
+                    }
+                }
+                if (rs1 != null) {
+                    try {
+                        rs1.close();
+                    } catch (SQLException ex) {
+                    }
+                }
+
+            }
+            return items;
+        }
+        return items;
+    }
+
+    //////////////////***********METHOD THREE*************/////////////////////////////
+    @Override
+    public ArrayList<Order> getAllOrders() {
+        ArrayList<Order> list = new ArrayList<>();
+        Order order = null;
+
+        try {
+            if (con != null) {
+                ps = con.prepareStatement("SELECT ID, TotalPrice, OrderDate, DeliveryDate, User, Address, Payment FROM orders ");
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    if (rs != null) {
+                        try {
+
+                            order = new Order();
+
+                            ArrayList<OrderLineItem> items = getOrderLineItems(rs.getInt("ID"));
+                            list.add(new Order(rs.getInt("ID"), items, rs.getDouble("TotalPrice"), rs.getString("DeliveryDate"),
+                                    rs.getString("OrderDate"), rs.getString("User"),
+                                    rs.getString("Address"), rs.getInt("Payment")));
+
+                        } catch (SQLException ex) {
+                            System.out.println("Error at : " + ex.getMessage());
+                        }
+
+                        list.add(order);
+
+                    }
+                }// end of while loop
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error at : " + ex.getMessage());
+        }
+        try {
+            if (ps != null) {
+                ps.close();
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error : " + ex.getMessage());
+        }
+        try {
+            if (con != null) {
+                con.close();
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error : " + ex.getMessage());
+        }
+        return list;
+    }
+
+    //////////////////***********METHOD FOUR*************/////////////////////////////
+    @Override
+    public ArrayList<Order> getPendingOrders() {
+        ArrayList<Order> list = new ArrayList<Order>();
+        Order order = null;
+        try {
+            if (con != null) {
+                ps = con.prepareStatement("SELECT ID, TotalPrice, OrderDate, User, Address, Payment FROM orders WHERE DeliveryDate = null ");
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    if (rs != null) {
+                        try {
+
+                            order = new Order();
+
+                            order.setId(rs.getInt("ID"));
+                            order.setTotalPrice(rs.getDouble("TotalPrice"));
+                            order.setOrderDate(rs.getDate("OrderDate"));
+                            order.setDeliveryDate(null);
+                            order.setUser(rs.getString("User"));
+                            order.setAddress(rs.getString("Address"));
+                            order.setPayment(rs.getString("Payment"));
+                            if ((rs.getInt("Deleted")) != 1) {
+                                order.setDeleted(Boolean.FALSE);
+                            } else {
+                                order.setDeleted(Boolean.TRUE);
+                            }
+
+                        } catch (SQLException ex) {
+                            System.out.println("Error at : " + ex.getMessage());
+                        }
+
+                    }
+                    if (order != null) {
+                        list.add(order);
+                    } else {
+                        System.out.println("Order is null");
+                    }
+                }
+
+            }// end of while loop
+
+        } catch (SQLException ex) {
+            System.out.println("Error at : " + ex.getMessage());
+        }
+        try {
+            if (ps.isClosed() != true) {
+                ps.close();
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error : " + ex.getMessage());
+        }
+        if (con != null) {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+            }
+        }
         return list;
     }
 
     @Override
-    public ArrayList<Order> getPendingOrders() 
-    {
+    public ArrayList<Order> getAllPlacedOrdersBetween(String dateFrom, String dateTo) {
+        ArrayList<Order> orders = new ArrayList();
+        if (con != null) {
+            if (dateTo != null) {
+                try {
+                    ps = con.prepareStatement("Select ID,TotalPrice,DeliveryDate,OrderDate,User,Address,Payment from orders WHERE cast(OrderDate as DATE) BETWEEN ? AND ? ");
+                    ps.setString(1, dateFrom);
+                    ps.setString(2, dateTo);
+
+                    rs = ps.executeQuery();
+                    while (rs.next()) {
+                        ArrayList<OrderLineItem> items = getOrderLineItems(rs.getInt("ID"));
+                        orders.add(new Order(rs.getInt("ID"), items, rs.getDouble("TotalPrice"), rs.getString("DeliveryDate"),
+                                rs.getString("OrderDate"), rs.getString("User"),
+                                rs.getString("Address"), rs.getInt("Payment")));
+                    }
+
+                } catch (SQLException ex) {
+                } finally {
+                    if (rs != null) {
+                        try {
+                            rs.close();
+                        } catch (SQLException ex) {
+                        }
+                    }
+
+                }
+            } else {
+                try {
+                    ps = con.prepareStatement("Select ID,TotalPrice,DeliveryDate,OrderDate,User,Address,Payment from orders WHERE cast(OrderDate as DATE) = ?");
+                    ps.setString(1, dateFrom);
+
+                    rs = ps.executeQuery();
+                    while (rs.next()) {
+                        ArrayList<OrderLineItem> items = getOrderLineItems(rs.getInt("ID"));
+                        orders.add(new Order(rs.getInt("ID"), items, rs.getDouble("TotalPrice"), rs.getString("DeliveryDate"),
+                                rs.getString("OrderDate"), rs.getString("User"),
+                                rs.getString("Address"), rs.getInt("Payment")));
+                    }
+
+                } catch (SQLException ex) {
+                } finally {
+                    if (rs != null) {
+                        try {
+                            rs.close();
+                        } catch (SQLException ex) {
+                        }
+                    }
+                    if (con != null) {
+                        try {
+                            con.close();
+                        } catch (SQLException ex) {
+                        }
+                    }
+
+                }
+
+            }
+        }
+        return orders;
     }
 
+    //////////////////***********METHOD FIVE*************/////////////////////////////
     @Override
-    public ArrayList<Order> getOrdersBetween(Date deliveryDate, Date orderDate) 
-    {
+    public ArrayList<Order> getOrdersBetween(Date deliveryDate, Date orderDate) {
+        ArrayList<Order> list = new ArrayList<Order>();
+        Order order = null;
+
+        try {
+            if (con != null) {
+                ps = con.prepareStatement("SELECT ID, TotalPrice, OrderDate, DeliveryDate, User, Address, Payment, Deleted FROM orders WHERE NOT (OrderDate>? OR DeliveryDate<?)  "); // this was an online tip I read, check again (the where not between dates)
+
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+                String Ordered = formatter.format(orderDate);
+                String Delivered = formatter.format(deliveryDate);
+                ps.setString(1, Ordered);
+                ps.setString(2, Delivered);
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    if (rs != null) {
+                        try {
+                            order = new Order();
+                            //order has 9 Columns
+                            /*#1*/
+                            order.setId(rs.getInt("ID"));
+                            /*#2*/
+                            order.setTotalPrice(rs.getDouble("TotalPrice"));
+                            /*#3*/
+                            order.setOrderDate(rs.getDate("OrderDate"));
+                            /*#4*/
+                            order.setDeliveryDate(rs.getDate("DeliveryDate"));
+
+                            /*#5*/
+                            order.setUser(rs.getString("user"));
+
+                            /*#6*/
+                            order.setAddress(rs.getString("address"));
+
+                            /*#7*/
+                            order.setPayment(rs.getString("Payment"));
+
+                        } catch (SQLException ex) {
+                            System.out.println("Error at : " + ex.getMessage());
+                        }
+
+                        list.add(order);
+                    }
+
+                }// end of while loop
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error at : " + ex.getMessage());
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+                if (rs != null) {
+                    rs.close();
+                }
+                if (!ps.isClosed()) {
+                    ps.close();
+                }
+            } catch (SQLException ex) {
+                System.out.println("Error  closing: " + ex.getMessage());
+            }
+        }
+        return list;
     }
 
-    @Override
-    public ArrayList<Order> getUserOrders(User user) 
-    {
-    }
-
-    @Override
-    public Order getUserOrder(Integer OrderId, String userId) 
-    {
-    }
-
-    @Override
-    public Order getOrder(Integer OrderId) 
-    {
-    }
-    
 }

@@ -1,32 +1,30 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.baked.ordering.models;
 
 /**
  *
- * @author khwezi
+ * @author Brendan
  */
 public class OrderLineItem {
     private String product;
     private Integer quantity;
     private Integer order;
-    private Integer id;
+   // private Integer id; this was removed 
     
     public OrderLineItem(String product,int quantity){
         setProduct(product);
         setQuantity(quantity);
     }
 
-    public OrderLineItem(String product, Integer quantity, Integer order, Integer id) {
+    public OrderLineItem(String product, Integer quantity, Integer order) 
+    {
         this.product = product;
         this.quantity = quantity;
         this.order = order;
-        this.id = id;
+        //this.id = id;
     }
 
+    public OrderLineItem(){}
     /**
      * @return the product
      */
@@ -63,12 +61,12 @@ public class OrderLineItem {
         this.order = order;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+//    public Integer getId() {
+//        return id;
+//    }
+//
+//    public void setId(Integer id) {
+//        this.id = id;
+//    }
     
 }

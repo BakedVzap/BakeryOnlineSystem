@@ -1,24 +1,28 @@
 
 package com.baked.accounts.models;
 
+
 /**
  *
- * @author UnicornBrendan
+ * 
  */
 public class Address {
     private String id;
     private String streetNumber;
     private String streetName;
-    private String suberb;
+    private String suburb;
     private String city;
     
-    public Address(){}
-    public Address(String id,String streetNumber,String streetName, String suberb,String city){
-        setId(id);
+    public Address(String streetNumber,String streetName, String suberb,String city){
         setStreetNumber(streetNumber);
         setStreetName(streetName);
         setSuberb(suberb);
         setCity(city);
+        setId();
+    }
+
+    public Address() 
+    {
     }
 
     /**
@@ -31,9 +35,11 @@ public class Address {
     /**
      * @param id the id to set
      */
-    public void setId(String id) {
-        this.id=id;
-        
+    public void setId() {
+        this.id =  getStreetNumber()+
+        getStreetName()+
+        getSuberb()+
+        getCity();
     }
 
     /**
@@ -65,17 +71,17 @@ public class Address {
     }
 
     /**
-     * @return the suberb
+     * @return the suburb
      */
     public String getSuberb() {
-        return suberb;
+        return suburb;
     }
 
     /**
-     * @param suberb the suberb to set
+     * @param suberb the suburb to set
      */
     public void setSuberb(String suberb) {
-        this.suberb = suberb;
+        this.suburb = suberb;
     }
 
     /**

@@ -1,2 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context path="/BakeryWebRest"/>
+<Context path="/BakeryWebRest">
+<Resource auth="Container"
+    driverClassName = "com.mysql.jdbc.Driver"
+    maxActive="300"
+    minIdle="15"
+    maxIdle="30"
+    maxWait="5000"
+    removeAbandoned="true"
+    removeAbandonedTimeout="50"
+    logAbandoned="true"
+    name="jdbc/tagdb"
+    type="javax.sql.DataSource"
+    url="jdbc:mysql://localhost:3306/thedoughknot"
+    defaultAutoCommit="true"
+    factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+    validationQuery="Select 1"
+    testOnBorrow="true"
+    username="root"
+    password="root"
+    closeMethod="close"
+    timeBetweenEvictionRuns="3000"
+    setTestOnBorrow="true"
+/><Context/>

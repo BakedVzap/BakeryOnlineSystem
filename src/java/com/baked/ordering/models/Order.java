@@ -4,51 +4,49 @@ package com.baked.ordering.models;
 import com.baked.accounts.models.Address;
 import com.baked.accounts.models.Payment;
 import com.baked.accounts.models.User;
-import java.sql.Date;
+//import java.sql.Date; Do NOT use this SQL date Format, util is better
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
- * @author UnicornBrendan
+ * @author Brendan
  */
 public class Order 
 {
         private Integer id;                             //  #1
         private ArrayList<OrderLineItem>items;          //  #2 remember this
         private Double totalPrice;                      //  #3
-        private Date DeliveryDate;                      //  #4
-        private Date OrderDate;                         //  #5
-        private User user;                              //  #6
-        private Address address;                        //  #7
-        private Payment Payment;                        //  #8
+        private  String DeliveryDate;                      //  #4
+        private  String OrderDate;                         //  #5
+        private String userId;                          //  #6
+        private String addressId;                         //  #7
+        private String PaymentId;                         //  #8
         private Boolean Deleted;                        //  #9
-        private Boolean Delivered;                      //  #10
+        
+        
       
 
-    public Order(Integer id, ArrayList<OrderLineItem> items, Double totalPrice, Date DeliveryDate, Date OrderDate, User user, Address address, Payment Payment, Boolean Deleted) 
+        
+   
+
+    public Order(Integer id, ArrayList<OrderLineItem> items, Double totalPrice, Date DeliveryDate, Date OrderDate, String user, String address, String Payment, Boolean Deleted) 
     {
         this.id = id;
         this.items = items;
-        this.totalPrice = totalPrice;
-        this.DeliveryDate = DeliveryDate;
-        this.OrderDate = OrderDate;
-        this.user = user;
-        this.address = address;
-        this.Payment = Payment;
+        setTotalPrice(totalPrice);
+        setDeliveryDate(DeliveryDate);
+        setOrderDate(OrderDate);
+        this.userId = user;
+        this.addressId = address;
+        this.PaymentId = Payment;
         this.Deleted = Deleted;
+       
     }
 
-    public Order(Integer id, ArrayList<OrderLineItem> items, Double totalPrice, Date DeliveryDate, Date OrderDate, User user, Address address, Payment Payment, Boolean Deleted, Boolean Delivered) {
-        this.id = id;
-        this.items = items;
-        this.totalPrice = totalPrice;
-        this.DeliveryDate = DeliveryDate;
-        this.OrderDate = OrderDate;
-        this.user = user;
-        this.address = address;
-        this.Payment = Payment;
-        this.Deleted = Deleted;
-        this.Delivered = Delivered;
+    public Order(int aInt, ArrayList<OrderLineItem> items, double aDouble, String string, String string0, String string1, String string2, int aInt0) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     
@@ -59,7 +57,7 @@ public class Order
     }
 
    
-    public Date getDeliveryDate() 
+    public String getDeliveryDate() 
     {
         return DeliveryDate;
     }
@@ -67,54 +65,71 @@ public class Order
    
     public void setDeliveryDate(Date DeliveryDate) 
     {
-        this.DeliveryDate = DeliveryDate;
+        if(DeliveryDate!=null)
+        {
+         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+         String dateString = formatter.format(DeliveryDate);
+        this.DeliveryDate = dateString;
+        }else 
+        {
+            System.out.println("Your Delivery Date is null");
+        }
     }
 
+    public Order (){}
    
-    public Date getOrderDate() 
+    public String getOrderDate() 
     {
         return OrderDate;
     }
 
     public void setOrderDate(Date OrderDate) 
     {
-        this.OrderDate = OrderDate;
+        if(OrderDate!=null)
+        {
+         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+         String dateString = formatter.format(OrderDate);
+         this.OrderDate = dateString;
+        }else 
+        {
+            System.out.println("Your Delivery Date is null");
+        }
     }
 
   
-    public User getUser() 
+    public String getUser() 
     {
-        return user;
+        return userId;
     }
 
    
-    public void setUser(User user) 
+    public void setUser(String user) 
     {
-        this.user = user;
+        this.userId = user;
     }
 
    
-    public Address getAddress() 
+    public String getAddress() 
     {
-        return address;
+        return addressId;
     }
 
    
-    public void setAddress(Address address) 
+    public void setAddress(String address) 
     {
-        this.address = address;
+        this.addressId = address;
     }
 
     
-    public Payment getPayment() 
+    public String getPayment() 
     {
-        return Payment;
+        return PaymentId;
     }
 
    
-    public void setPayment(Payment Payment) 
+    public void setPayment(String Payment) 
     {
-        this.Payment = Payment;
+        this.PaymentId = Payment;
     }
 
     public Boolean getDeleted() 
@@ -134,12 +149,7 @@ public class Order
         setItems(items);
         setTotalPrice(totalPrice);
     }
-    
-    public Order()
-    {
-        
-    }
-
+   
     public Integer getId() 
     {
         return id;
@@ -172,15 +182,11 @@ public class Order
         this.setTotalPrice((Double) totalPrice);
     }
 
-    public Boolean getDelivered() {
-        return Delivered;
-    }
-
-    public void setDelivered(Boolean Delivered) {
-        this.Delivered = Delivered;
-    }
+   
     
     
     
     
 }
+    
+

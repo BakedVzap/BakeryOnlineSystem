@@ -3,8 +3,9 @@ package com.baked.order.dao;
 
 import com.baked.accounts.models.User;
 import com.baked.ordering.models.Order;
-import java.sql.Date;
+//import java.sql.Date;  // remember not to use sql date
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
@@ -12,13 +13,13 @@ import java.util.ArrayList;
  */
 public interface OrderDaoInterface 
 {
+    public ArrayList<Order> getAllPlacedOrdersBetween(String dateFrom, String dateTo);
     boolean addOrder(Order order);
-    boolean setDeliveryDate(Integer orderId, Date deliveryDate);
+   // boolean setDeliveryDate(Integer orderId, Date deliveryDate);    REPLACED
     ArrayList<Order> getAllOrders();
     ArrayList<Order> getPendingOrders();
     ArrayList<Order> getOrdersBetween(Date deliveryDate , Date orderDate);
-    ArrayList<Order> getUserOrders(User user);
-    Order getUserOrder(Integer OrderId, String userId);
+    public boolean setDeliveryDate(Integer orderId);
     Order getOrder(Integer OrderId);
     
     

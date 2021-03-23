@@ -4,6 +4,7 @@ package com.baked.accounts.dao;
 import com.baked.accounts.models.Address;
 import com.baked.accounts.models.Payment;
 import com.baked.accounts.models.User;
+import com.baked.ordering.models.Order;
 import java.util.ArrayList;
 
 /**
@@ -25,4 +26,6 @@ public interface AccountsDAOInterface {
     boolean deleteUserAddress(int userAddressID,String userID);
     boolean passwordRest(String userID,String newPassword);
     public ArrayList<Address> getUserAddress(String userID);
+    ArrayList<Order> getUserOrders(User user);
+    Order getUserOrder(Integer OrderId, String userId);
 }
